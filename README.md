@@ -1,4 +1,4 @@
-##OSGridConverter
+## OSGridConverter
 
 Libraries to convert between GIS co-ordinate systems, specifically *latitude / longitude* co-ordinates 
 and *easting / northing* co-ordinates based on projection to an ellipsoidal approximation to the geoid.
