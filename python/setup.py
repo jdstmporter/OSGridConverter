@@ -20,7 +20,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='OSGridConverter',
-    version='0.1.0',
+    version='0.1.2',
     description='Library to convert co-ordinates between the (UK) Ordnance Survey National Grid and latitude/longitude',
     long_description=long_description,
     url='https://github.com/....',

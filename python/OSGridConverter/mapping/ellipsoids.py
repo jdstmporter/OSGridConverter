@@ -45,6 +45,7 @@ Airy1830 = Ellipsoid(6377563.396,6356256.909,1/299.3249646)
 AiryModified = Ellipsoid(6377340.189,6356034.448,1/299.3249646)
 Intl1924 = Ellipsoid(6378388,6356911.946,1.0/297.0)
 Bessel1841 = Ellipsoid(6377397.155,6356078.963,1/299.152815351)
+Clarke1880 = Ellipsoid(6378249.2,6356515,1/293.465)
 
 '''
 Need to define matrix class
@@ -66,7 +67,7 @@ class Datum (object):
             
 Data = dict(
     WGS84      =  Datum(WGS84,Transform([0.0,0.0,0.0],[0.0,0.0,0.0],0.0)),
-    ITRF90     =  Datum(GRS80,Transform([-0.060,0.517,0.223],[-0.0183,0.0003,-0.007],0.011)),
+    NTF        =  Datum(Clarke1880,Transform([168,60,-320],[0.0,0.0,0.0],0.0)),
     NAD83      =  Datum(GRS80,Transform([1.004,-1.910,-0.515],[0.0267,0.00034,0.011],-0.0015)),
     OSGB36     =  Datum(Airy1830,Transform([-446.448,125.157,-542.060],[-0.1502,-0.2470,-0.8421],20.4894)),
     ED50       =  Datum(Intl1924,Transform([89.5,93.8,123.1],[0.0,0.0,0.156],-1.2)),
