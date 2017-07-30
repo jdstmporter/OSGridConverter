@@ -30,6 +30,14 @@ class LatLong (object):
             oldC = Cartesian(self)      
             newC = transformation(self.tag,newTag,oldC)
             return LatLong(newC,tag=newTag)
+        
+    @property
+    def errorRatio(self):
+        return self.datum.errorRatio(self.latitude,self.longitude)
+    
+    @property
+    def logErrorRatio(self):
+        return self.datum.logErrorRatio(self.latitude,self.longitude)
     
     def __str__(self):
         return '{:>+.5f}:{:>+.5f}'.format(self.latitude,self.longitude)

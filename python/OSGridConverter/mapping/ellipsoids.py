@@ -5,7 +5,8 @@ Created on 19 Jul 2017
 '''
 
 from ..cartesian import Cartesian, Transform, dot
-from math import sin,cos, pow
+from math import sin,cos, pow, radians, log10
+
 
 class Ellipsoid (object) :
     def __init__(self,a,b,f):
@@ -62,6 +63,28 @@ class Datum (object):
     def __init__(self,ellipsoid,transform):
         self.ellipsoid=ellipsoid
         self.transform=transform
+        
+        
+    def errorRatio(self,latitude,longitude):
+        phi=radians(latitude)
+        l  =radians(longitude)
+        
+        s2p=pow(sin(phi),2)
+        s2l=pow(sin(l),2)
+        
+        dl=1-self.ellipsoid.e1*(1-s2p*s2l)
+        dp=(1-s2l)*(1-self.ellipsoid.e1*s2p)
+        
+        return (dp,dl)
+    
+    def logErrorRatio(self,latitude,longitude):
+        dp,dl=self.errorRatio(latitude, longitude)
+        r=abs(dl-dp)
+        if r<=0: return 1000
+        else: return -log10(r)
+        
+        
+    
         
     
             

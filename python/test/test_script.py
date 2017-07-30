@@ -24,6 +24,8 @@ class GridToLatLongAndBack(TestFramework):
             ll=grid1.toLatLong(tag=self.tag, viaString=True)
             grid2=OSGridReference(ll)
             error=gridDiff(grid1,grid2)
+            #ratio=ll.logErrorRatio;
+            #print('{}  {} -  {}  {}  : {} {}'.format(grid1,grid1.eastNorth(),grid2,grid2.eastNorth(),error,ratio))
             self.push(error,3)
             er=(str(grid1)==str(grid2)) or (error>3.0)
             if er: return 1
@@ -50,7 +52,9 @@ class LatLongToGridAndBack (TestFramework):
         ll2=grid.toLatLong(tag=self.tag)
         #e=(ll1.latitude-ll2.latitude,ll1.longitude-ll2.longitude)
         error=latlongDiff(ll1,ll2)
-        #print('{} - {} - {} : {} {}'.format(ll1,grid,ll2,e,error))
+        #ratio=ll1.errorRatio;
+        #lratio=ll1.logErrorRatio;
+        #print('{} - {} - {} : {} {} {}'.format(ll1,grid,ll2,e,ratio,lratio))
         return  self.push(error,3)
         
         
