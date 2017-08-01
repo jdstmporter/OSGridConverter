@@ -1,16 +1,15 @@
-/*
- * main.cpp
- *
- *  Created on: 29 Jul 2017
- *      Author: julianporter
- */
+//============================================================================
+// Name        : CeoCoordinatesCPP.cpp
+// Author      : JP Embedded Solutions Limited
+// Version     :
+// Copyright   : Copyright  2017 JP Embedded Solutions Limited
+// Description : Hello World in C++, Ansi-style
+//============================================================================
 
-
-#include "test.hpp"
+#include <iostream>
+using namespace std;
 
 int main() {
-	auto t = test();
+	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 	return 0;
 }
-
-

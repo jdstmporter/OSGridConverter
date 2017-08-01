@@ -35,7 +35,7 @@ Ellipsoid & Ellipsoid::operator==(const Ellipsoid &other) noexcept {
 double Ellipsoid::meridional(double phi,double phi0) noexcept {
 	auto plus  = phi+phi0;
 	auto minus = phi-phi0;	
-	vector<double> angles(4);
+	Vector angles(4);
 	angles(0)=plus;
 	angles(1)=-sin(minus)*cos(plus);
 	angles(2)=sin(2*minus)*cos(2*plus);
@@ -43,21 +43,21 @@ double Ellipsoid::meridional(double phi,double phi0) noexcept {
 	return inner_prod(M,angles);
 }
 
-std::shared_ptr<Model> Model::the=std::shared_ptr<Model>();
+Ellipsoid::Parameters Ellipsoid::ellipsoids = Ellipsoid::Parameters();
 
-Model::Model() : ellipsoids() {
-	ellipsoids[Name::WGS84]        = Ellipsoid(6378137    ,6356752.31425);
-	ellipsoids[Name::GRS80]        = Ellipsoid(6378137    ,6356752.31414);
-	ellipsoids[Name::Airy1830]     = Ellipsoid(6377563.396,6356256.909);
-	ellipsoids[Name::AiryModified] = Ellipsoid(6377340.189,6356034.448);
-	ellipsoids[Name::Intl1924]     = Ellipsoid(6378388    ,6356911.946);
-	ellipsoids[Name::Bessel1841]   = Ellipsoid(6377397.155,6356078.963);
-	ellipsoids[Name::Clarke1880]   = Ellipsoid(6378249.2  ,6356515);
+void Ellipsoid::initialise() {
+	ellipsoids[Name::WGS84]        = {6378137.0  ,6356752.31425};
+	ellipsoids[Name::GRS80]        = {6378137.0  ,6356752.31414};
+	ellipsoids[Name::Airy1830]     = {6377563.396,6356256.909};
+	ellipsoids[Name::AiryModified] = {6377340.189,6356034.448};
+	ellipsoids[Name::Intl1924]     = {6378388.0  ,6356911.946};
+	ellipsoids[Name::Bessel1841]   = {6377397.155,6356078.963};
+	ellipsoids[Name::Clarke1880]   = {6378249.2  ,6356515.0};
 }
 
-Ellipsoid Model::ellipsoid(const Name &key) {
-	if(!the) the=std::make_shared<Model>();
-	return the->get(key);
+Ellipsoid Ellipsoid::get(const Name &key) {
+	if(ellipsoids.size()==0) initialise();
+	return std::move(Ellipsoid(ellipsoids[key]));
 }
 
 

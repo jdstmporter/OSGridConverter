@@ -12,48 +12,53 @@ using namespace boost::numeric::ublas;
 
 namespace mapping {
 
-Matrix HelmertMatrix::rsMatrix(const Vector & r,const double s) {
-	if(r.size()!=3) throw std::length_error("vector must have length 3 in Helmert Matrix");
+
+std::valarray<unsigned> Helmert::indices(const unsigned index) {
+	auto i1=(index+1)%3;
+	auto i2=(index+2)%3;
+	return std::move(std::valarray<unsigned> {i1, i2});
+}
+
+Matrix Helmert::matrix(const Vector & r,const double s) {
 	Matrix m = s*ID(3);
-	for(unsigned i=0;i<3;i++) {
-		auto j=(i+1)%3;
-		auto k=(i+2)%3;
+	for(auto i=0;i<3;i++) {
+		auto jk = Helmert::indices(i);
 		auto v=r(i);
-		m(j,k)=v;
-		m(k,j)=-v;
+		m(jk[0],jk[1])= v;
+		m(jk[1],jk[0])=-v;
 	}
-	return m;
+	return std::move(m);
 }
 
-double HelmertMatrix::determinant() { return s*(inner_prod(r,r)+s*s); }
-
-HelmertMatrix HelmertMatrix::inverse() {
-	Matrix ix=HelmertMatrix::rsMatrix(-r,s)*s + outer_prod(r,r);
-	double d=1.0/determinant();
-	return HelmertMatrix(ix*d);
+Matrix Helmert::inverseMatrix(const Vector & r,const double s) {
+	auto d=1.0/(s*(inner_prod(r,r)+s*s));
+	return std::move((Helmert::matrix(-r,s)*s + outer_prod(r,r))*d);
 }
 
-HelmertMatrix & HelmertMatrix::operator=(const HelmertMatrix &other) {
-	r=other.r;
-	s=other.s;
-	mx=other.mx;
+
+Helmert::Helmert(const Vector & T,const Vector & R, const double S) : t(T)  {
+	mx=Helmert::matrix(R,S+1.0);
+	inv=Helmert::inverseMatrix(R,S+1.0);
+}
+
+Helmert & Helmert::operator=(const Helmert &o) {
+	t=o.t;
+	mx=o.mx;
+	inv=o.inv;
 	return *this;
 }
 
-Vector operator*(const HelmertMatrix &h,const Vector &v) {
-	prod(h.mx,v);
+
+Helmert Helmert::inverse() {
+	auto it  = -prod(inv,t);
+	return std::move(Helmert(it,inv,mx));
+}
+
+Vector Helmert::operator()(Vector x) {
+	return std::move(prod(mx,x)+t);
 }
 
 
-
-Helmert::Helmert() {
-	// TODO Auto-generated constructor stub
-
-}
-
-Helmert::~Helmert() {
-	// TODO Auto-generated destructor stub
-}
 
 } /* namespace mapping */
 

@@ -7,6 +7,9 @@ Created on 19 Jul 2017
 from .base import OSGridError, areNumbers
 from .mapping import Data, transformation
 from .cartesian import Cartesian
+import re
+
+
 
 
 class LatLong (object):
@@ -16,8 +19,23 @@ class LatLong (object):
             raise OSGridError('Initialisation of LatLong requires at least one argument')
         self.tag=tag
         self.datum=Data[tag]
-        if isinstance(args[0],Cartesian):
-            self.latitude, self.longitude = args[0].LatLong(self.datum.ellipsoid)
+        arg=args[0]
+        if isinstance(arg,Cartesian):
+            self.latitude, self.longitude = arg.LatLong(self.datum.ellipsoid)
+        elif isinstance(arg,str):
+            match1=re.match(r'^\s*([+-]?(?:\d*\.)?\d+)([NnSs])\s*,\s*([+-]?(?:\d*\.)?\d+)([EeWw])\s*$',arg)
+            match2=re.match(r'^\s*([+-]?(?:\d*\.)?\d+)\s*,\s*([+-]?(?:\d*\.)?\d+)\s*$',arg)
+            if match1:
+                lat, ns, long, ew=match1.groups()
+                lat=float(lat)
+                long=float(long)
+                if ns.upper() == 'S': lat=-lat
+                if ew.upper() == 'W': long=-long
+                self.latitude, self.longitude = lat, long 
+            elif match2:     
+                self.latitude, self.longitude =[float(x) for x in match2.groups()]
+            else:
+                raise OSGridError('Cannot parse argument {}'.format(arg))   
         elif len(args)>=2 and areNumbers(args[:2]):
             self.latitude, self.longitude = args
         else:
@@ -42,4 +60,7 @@ class LatLong (object):
     def __str__(self):
         return '{:>+.5f}:{:>+.5f}'.format(self.latitude,self.longitude)
     
+    
+        
+ 
     

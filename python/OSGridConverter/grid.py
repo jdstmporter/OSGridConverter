@@ -42,7 +42,7 @@ class OSGridReference (object):
             match = re.match('^([A-Z]{2})\s*([0-9]+)(\s*)([0-9]+)$',gridref)
             if not match:
                 log.error("Couldn't match expected format")
-                raise RuntimeError('Invalid grid reference')
+                raise OSGridError('Invalid grid reference')
         
             g=match.groups()
             alpha=g[0]
@@ -57,7 +57,7 @@ class OSGridReference (object):
             log.debug("e100k = {}, n100k = {}",e100km,n100km)
             if e100km<0 or e100km>6 or n100km<0 or n100km>12:
                 log.error("e100k = {}, n100k = {} - OOR",e100km,n100km)
-                raise RuntimeError('Invalid grid reference')
+                raise OSGridError('Invalid grid reference')
     
             if len(g[2])==0 :
                 s=g[1]+g[3]
@@ -68,7 +68,7 @@ class OSGridReference (object):
     
             if len(en[0]) != len(en[1]):
                 log.error('e=*{}* n=*{}* - unequal lengths',*en)
-                raise RuntimeError('Invalid grid reference')
+                raise OSGridError('Invalid grid reference')
             
             
             en=[int((x+'00000')[:5]) for x in en ]
@@ -159,7 +159,5 @@ class OSGridReference (object):
         return (self.E, self.N)
     
     
-            
-        
  
 

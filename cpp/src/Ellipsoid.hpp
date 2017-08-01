@@ -8,12 +8,11 @@
 #ifndef ELLIPSOID_HPP_
 #define ELLIPSOID_HPP_
 
-#include <boost/numeric/ublas/vector.hpp>
-#include <boost/numeric/ublas/io.hpp>
+#include "algebra.hpp"
 #include <map>
 #include <memory>
+#include <vector>
 
-using namespace boost::numeric::ublas;
 
 namespace mapping {
 
@@ -27,12 +26,13 @@ private:
 	double e1;
 	double e2;
 	double n;
-	vector<double> M;
-	
-	
-	
+	Vector M;
+
 public:
+
+
 	Ellipsoid(const double a=1.0,const double b=1.0) noexcept;
+	Ellipsoid(const std::vector<double> &params) noexcept : Ellipsoid(params[0],params[1]) {};
 	Ellipsoid(const Ellipsoid &other) noexcept : Ellipsoid(other.A,other.B) {};
 	Ellipsoid & operator==(const Ellipsoid &other) noexcept;
 	virtual ~Ellipsoid() = default;
@@ -45,11 +45,6 @@ public:
 	
 	double meridional(double phi,double phi0) noexcept;
 
-
-};
-
-class Model {
-public:
 	enum class Name {
 		WGS84,
 		GRS80,
@@ -59,19 +54,17 @@ public:
 		Bessel1841,
 		Clarke1880
 	};
-private:
-	std::map<Name,Ellipsoid> ellipsoids;
-	static std::shared_ptr<Model> the;
-public:
-	
+	static Ellipsoid get(const Name &key);
 
-	
-	Model();
-	virtual ~Model() = default;
-	
-	Ellipsoid get(const Name &key) { return ellipsoids[key]; }
-	static Ellipsoid ellipsoid(const Name &key);
+
+private:
+	using Parameters=std::map<Name,std::vector<double>>;
+	static Parameters ellipsoids;
+	static void initialise();
+
 };
+
+
 
 } /* namespace mapping */
 

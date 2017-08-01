@@ -10,3 +10,15 @@ def grid2latlong(grid,tag='WGS84'):
     gr=OSGridReference(grid)
     return gr.toLatLong(tag=tag)
 
+def parse(arg):
+    try:
+        return OSGridReference(arg)
+    except:
+        pass
+    try:
+        return LatLong(arg)
+    except:
+        pass
+    return arg
+        
+
