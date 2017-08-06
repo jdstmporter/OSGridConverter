@@ -16,6 +16,8 @@ namespace mapping {
 
 
 class Helmert {
+	friend bool operator==(const Helmert &l,const Helmert &r);
+	friend bool operator!=(const Helmert &l,const Helmert &r);
 private:
 	Vector t;
 	Matrix mx;
@@ -34,10 +36,13 @@ public:
 	virtual ~Helmert() = default;
 
 	Helmert & operator=(const Helmert &o);
-	Helmert inverse();
-	Vector operator()(Vector x);
+	Helmert & inverse() const;
+	Vector & operator()(Vector x) const;
 };
 
 } /* namespace mapping */
+
+bool operator==(const mapping::Helmert &l,const mapping::Helmert &r);
+bool operator!=(const mapping::Helmert &l,const mapping::Helmert &r);
 
 #endif /* HELMERT_HPP_ */

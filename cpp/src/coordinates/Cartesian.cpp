@@ -32,6 +32,25 @@ Cartesian::Cartesian(const LatitudeLongitude &l) : vector(3) {
 	vector(2)=nu*(1.0-e.eccentricity1()*s);
 }
 
+double Cartesian::P() const {
+	return hypot(vector(0),vector(1));
+}
+
+double Cartesian::RSquared() const {
+	return boost::numeric::ublas::inner_prod(vector,vector);
+}
+
+double Cartesian::operator[](const Cartesian::Axis &axis) const {
+	return vector(static_cast<unsigned>(axis));
+}
+
+Cartesian Cartesian::transform(const mapping::Helmert &helmert) {
+	auto out=helmert(vector);
+	return std::move(Cartesian(out));
+}
+
+
+
 
 } /* namespace coordinates */
 

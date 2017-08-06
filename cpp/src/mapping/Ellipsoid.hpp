@@ -19,6 +19,8 @@ namespace mapping {
 
 
 class Ellipsoid {
+	friend bool operator==(const Ellipsoid &l,const Ellipsoid &r);
+	friend bool operator!=(const Ellipsoid &l,const Ellipsoid &r);
 private:
 	double A;
 	double B;
@@ -37,11 +39,11 @@ public:
 	Ellipsoid & operator==(const Ellipsoid &other) noexcept;
 	virtual ~Ellipsoid() = default;
 	
-	double eccentricity1() noexcept { return e1; }
-	double eccentricity2() noexcept { return e2; }
-	double majorAxis() noexcept { return A; }
-	double minorAxis() noexcept { return B; }
-	double flattening() noexcept { return f; }
+	double eccentricity1() const noexcept { return e1; }
+	double eccentricity2() const noexcept { return e2; }
+	double majorAxis() const noexcept { return A; }
+	double minorAxis() const noexcept { return B; }
+	double flattening() const noexcept { return f; }
 	
 	double meridional(double phi,double phi0) noexcept;
 
@@ -68,6 +70,6 @@ private:
 
 } /* namespace mapping */
 
-
-
+bool operator==(const mapping::Ellipsoid &l,const mapping::Ellipsoid &r);
+bool operator!=(const mapping::Ellipsoid &l,const mapping::Ellipsoid &r);
 #endif /* ELLIPSOID_HPP_ */

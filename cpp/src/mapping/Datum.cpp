@@ -34,9 +34,16 @@ Vector _v(const std::initializer_list<double> values) {
 Datum Datum::get(const Name &key) {
 	if(data.size()==0) initialise();
 	auto spec=data[key];
-	return std::move(Datum(std::get<0>(spec),_v(std::get<1>(spec)),_v(std::get<2>(spec)),std::get<3>(spec)));
+	return std::move(Datum(std::get<0>(spec),_v(std::get<1>(spec)),_v(std::get<2>(spec)),std::get<3>(spec),std::make_shared<Name>(key)));
 }
 
+}
+
+bool operator==(const mapping::Datum &l,const mapping::Datum &r) {
+	return (l.e==r.e) && (l.helmert==r.helmert);
+}
+bool operator!=(const mapping::Datum &l,const mapping::Datum &r){
+	return (l.e!=r.e) || (l.helmert!=r.helmert);
 }
 
 

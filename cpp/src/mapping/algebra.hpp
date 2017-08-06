@@ -11,9 +11,11 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
+#include <cmath>
 
 #define PI 3.14159265359
 #define radians(x) (x*PI/180.0)
+#define degrees(x) (x*180.0/PI)
 
 namespace mapping {
 

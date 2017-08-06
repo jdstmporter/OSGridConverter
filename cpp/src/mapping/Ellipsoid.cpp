@@ -64,5 +64,13 @@ Ellipsoid Ellipsoid::get(const Name &key) {
 
 }
 
+bool operator==(const mapping::Ellipsoid &l,const mapping::Ellipsoid &r) {
+	return (l.A==r.A) && (l.B==r.B);
+}
+
+bool operator!=(const mapping::Ellipsoid &l,const mapping::Ellipsoid &r) {
+	return (l.A!=r.A) || (l.B!=r.B);
+}
+
 
 

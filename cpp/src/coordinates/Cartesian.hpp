@@ -8,14 +8,22 @@
 #ifndef CARTESIAN_HPP_
 #define CARTESIAN_HPP_
 
-#include "mapping/algebra.hpp"
+#include <mapping/algebra.hpp>
+#include <mapping/Helmert.hpp>
 
 
 namespace coordinates {
 
 class LatitudeLongitude;
 
+
 class Cartesian {
+public:
+	enum class Axis : unsigned {
+		X = 0,
+		Y = 1,
+		Z = 2
+	};
 private:
 	mapping::Vector vector;
 public:
@@ -24,7 +32,15 @@ public:
 	Cartesian(const LatitudeLongitude &l);
 	Cartesian(const Cartesian &o) : vector(o.vector) {};
 	virtual ~Cartesian() = default;
+
+	double P() const;
+	double RSquared() const;
+	double operator[](const Axis &axis) const;
+	Cartesian transform(const mapping::Helmert &helmert);
+
+	operator mapping::Vector() const { return vector; }
 };
+
 
 } /* namespace coordinates */
 

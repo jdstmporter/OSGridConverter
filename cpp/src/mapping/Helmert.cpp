@@ -49,18 +49,26 @@ Helmert & Helmert::operator=(const Helmert &o) {
 }
 
 
-Helmert Helmert::inverse() {
+Helmert & Helmert::inverse() const {
 	auto it  = -prod(inv,t);
-	return std::move(Helmert(it,inv,mx));
+	return Helmert(it,inv,mx);
 }
 
-Vector Helmert::operator()(Vector x) {
-	return std::move(prod(mx,x)+t);
+Vector & Helmert::operator()(Vector x) const {
+	return prod(mx,x)+t;
 }
 
 
 
 } /* namespace mapping */
+
+bool operator==(const mapping::Helmert &l,const mapping::Helmert &r) {
+	return (l.t==r.t) && (l.mx==r.mx);
+}
+bool operator!=(const mapping::Helmert &l,const mapping::Helmert &r){
+	return (l.t!=r.t) || (l.mx!=r.mx);
+}
+
 
 
   

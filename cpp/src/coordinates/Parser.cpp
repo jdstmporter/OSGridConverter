@@ -6,14 +6,16 @@
  */
 
 #include "Parser.hpp"
+#include "OSGrid.hpp"
 #include <sstream>
+#include <iomanip>
 #include <cmath>
 
 
 namespace coordinates {
 
-const std::regex Parser::lonlatNSEW ("^\\s*([+-]?(?:\\d*\\.)?\d+)([ns])\\s*,\\s*([+-]?(?:\\d*\\.)?\d+)([ew])\\s*$",std::regex::icase);
-const std::regex Parser::lonlatPM   ("^\\s*([+-]?(?:\\d*\\.)?\d+)\\s*,\\s*([+-]?(?:\\d*\\.)?\\d+)\\s*$",std::regex::icase);
+const std::regex Parser::lonlatNSEW ("^\\s*([+-]?(?:\\d*\\.)?\\d+)([ns])\\s*,\\s*([+-]?(?:\\d*\\.)?\\d+)([ew])\\s*$",std::regex::icase);
+const std::regex Parser::lonlatPM   ("^\\s*([+-]?(?:\\d*\\.)?\\d+)\\s*,\\s*([+-]?(?:\\d*\\.)?\\d+)\\s*$",std::regex::icase);
 const std::regex Parser::gridOS1     ("^\\s*([A-Z]{2})\\s*([0-9]+)\\s*$",std::regex::icase);
 const std::regex Parser::gridOS2     ("^\\s*([A-Z]{2})\\s*([0-9]+)\\s*([0-9]+)\\s*$",std::regex::icase);
 const std::string Parser::gridAlphabet="ABCDEFGHJKLMNOPQRSTUVWXYZ";
@@ -62,9 +64,9 @@ bool Parser::completeGrid(const unsigned e,const unsigned n) {
 	int n100km=19-5*int(l1/5) - int(l2/5);
 	if(e100km<0 || e100km>6 || n100km<0 || n100km>12) return false;
 
-	e=padTo(e,5);
-	n=padTo(n,5);
-	parameters=std::make_pair(e+e100km*1.0e5,n+n100km*1.0e6);
+	auto ee=padTo(e,5);
+	auto nn=padTo(n,5);
+	parameters=std::make_pair(ee+e100km*1.0e5,nn+n100km*1.0e6);
 	return true;
 }
 
@@ -89,5 +91,39 @@ bool Parser::isGrid() {
 	catch(...) {}
 	return false;
 }
+
+Parser::Kind Parser::parsedAs() {
+	if(kind==Kind::Unparsed) {
+		kind = isGrid() ? Kind::Grid :
+				isLatLong() ? Kind::LatLong : Kind::Unknown;
+	}
+	return kind;
+}
+
+std::string Parser::toString(const OSGrid &g) const {
+	try {
+		auto c=g.coordinates();
+		auto E=std::get<0>(c);
+		auto N=std::get<1>(c);
+		long e100km=E/10000;
+		long n100km=N/10000;
+		if(e100km<0 || e100km>6 || n100km<0 || n100km>12) return "OOR";
+		auto nf=19-n100km;
+		auto ef=10+e100km;
+
+		long l1=nf-(nf%5)+(ef/5);
+		long l2=(5*nf)%25 + (ef%5);
+		std::stringstream s;
+		s << Parser::gridAlphabet[l1] << Parser::gridAlphabet[l2];
+		auto e = E%100000;
+		auto n = N%100000;
+		s << " " << std::setw(5) << std::setfill('0')  << std::right << e << " " << n;
+		return s.str();
+	}
+	catch(...) {
+		return "OOR";
+	}
+}
+
 
 } /* namespace coordinates */
