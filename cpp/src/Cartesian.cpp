@@ -10,7 +10,7 @@
 #include <cmath>
 
 
-namespace mapping {
+
 namespace coordinates {
 
 Cartesian::Cartesian(const double x,const double y,const double z) : vector(3) {
@@ -34,4 +34,4 @@ Cartesian::Cartesian(const LatitudeLongitude &l) : vector(3) {
 
 
 } /* namespace coordinates */
-} /* namespace mapping */
+

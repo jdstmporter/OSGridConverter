@@ -8,18 +8,18 @@
 #ifndef CARTESIAN_HPP_
 #define CARTESIAN_HPP_
 
-#include "algebra.hpp"
+#include "mapping/algebra.hpp"
 
-namespace mapping {
+
 namespace coordinates {
 
 class LatitudeLongitude;
 
 class Cartesian {
 private:
-	Vector vector;
+	mapping::Vector vector;
 public:
-	Cartesian(const Vector &v = mapping::Zero(3)) : vector(v) {};
+	Cartesian(const mapping::Vector &v = mapping::Zero(3)) : vector(v) {};
 	Cartesian(const double x,const double y,const double z);
 	Cartesian(const LatitudeLongitude &l);
 	Cartesian(const Cartesian &o) : vector(o.vector) {};
@@ -27,6 +27,6 @@ public:
 };
 
 } /* namespace coordinates */
-} /* namespace mapping */
+
 
 #endif /* CARTESIAN_HPP_ */

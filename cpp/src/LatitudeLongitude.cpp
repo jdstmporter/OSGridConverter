@@ -7,7 +7,7 @@
 
 #include "LatitudeLongitude.hpp"
 
-namespace mapping {
+
 namespace coordinates {
 
 
@@ -15,4 +15,4 @@ namespace coordinates {
 
 
 } /* namespace coordinates */
-} /* namespace mapping */
+
