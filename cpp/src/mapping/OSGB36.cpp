@@ -16,7 +16,9 @@ const double OSGB36::lambda0 = radians(-2.0);
 const int OSGB36::N0 = -100000;
 const int OSGB36::E0 =  400000;
 
-OSGB36::OSGB36(double Phi,double LambdaE) : ellipsoid(Ellipsoid::get(Ellipsoid::Name::Airy1830)),phi(Phi), E(LambdaE), transforms() {
+Ellipsoid OSGB36::ellipsoid = Ellipsoid::get(Ellipsoid::Name::Airy1830);
+
+OSGB36::OSGB36(double Phi,double LambdaE) : phi(Phi), E(LambdaE), transforms() {
 	auto s=sin(phi);
 	auto c=cos(phi);
 	auto t=tan(phi);

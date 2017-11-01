@@ -7,11 +7,25 @@
 //============================================================================
 
 #include <iostream>
-#include <coordinates/Cartesian.hpp>
+#include <cppunit/Test.h>
+#include <cppunit/TestSuite.h>
+#include <cppunit/TestRunner.h>
+#include <cppunit/TestCaller.h>
+#include <cppunit/ui/text/TestRunner.h>
+#include "test.hpp"
+
 using namespace std;
 
+CppUnit::Test *makeSuite() {
+	auto suite = new CppUnit::TestSuite( "Mapping Test Suite" );
+	suite->addTest( new CppUnit::TestCaller<GridToLatLong>("Grid to LatLong",&GridToLatLong::testAction ) );
+//	suite->addTest( new CppUnit::TestCaller<LatLongToGrid>("LatLong to Grid",&LatLongToGrid::testAction ) );
+	return suite;
+}
+
 int main() {
-	auto c=coordinates::Cartesian(1.0,2.0,3.0);
-	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
+	CppUnit::TextUi::TestRunner runner;
+	runner.addTest( makeSuite() );
+	runner.run();
 	return 0;
 }

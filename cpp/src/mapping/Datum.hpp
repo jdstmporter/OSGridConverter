@@ -17,7 +17,20 @@
 
 namespace mapping {
 
+struct Specification {
+public:
+		using IList=std::initializer_list<double>;
+		Ellipsoid::Name name;
+		Vector t;
+		Vector r;
+		double e;
 
+		Specification() : name(), t(), r(), e(0.0) {};
+		Specification(const Ellipsoid::Name &n_,IList r_,IList t_,const double e_);
+		Specification(const Specification &) = default;
+		virtual ~Specification() = default;
+		Specification & operator=(const Specification &) = default;
+	};
 
 class Datum {
 	friend bool operator==(const Datum &l,const Datum &r);
@@ -35,18 +48,18 @@ public:
 private:
 	Ellipsoid e;
 	Helmert helmert;
-	using Specification=std::tuple<Ellipsoid::Name,std::initializer_list<double>,std::initializer_list<double>,double>;
 
 public:
 	Datum(const Ellipsoid::Name & model,const Vector &t,const Vector &r,const double s) :  e(Ellipsoid::get(model)), helmert(Helmert(t,r,s)) {};
 	Datum(const Ellipsoid::Name & model,const Helmert &h) : e(Ellipsoid::get(model)), helmert(h) {};
+	Datum(const Specification & spec) : Datum(spec.name,spec.t,spec.r,spec.e) {};
 	Datum(const Datum &o) : e(o.e), helmert(o.helmert) {};
 	virtual ~Datum() = default;
 	
 	const Ellipsoid & ellipsoid() const { return e; }
-	Vector & operator()(const Vector &v) const { return helmert(v); }
-	Vector & apply(const Vector &v) const { return helmert(v); }
-	Vector & invert(const Vector &v) const { return helmert.inverse()(v); }
+	Vector operator()(const Vector &v) const { return helmert(v); }
+	Vector apply(const Vector &v) const { return helmert(v); }
+	Vector invert(const Vector &v) const { return helmert.inverse()(v); }
 
 
 
@@ -59,12 +72,12 @@ private:
 
 };
 
-
+bool operator==(const Datum &l,const Datum &r);
+bool operator!=(const Datum &l,const Datum &r);
 
 } /* namespace mapping */
 
-bool operator==(const mapping::Datum &l,const mapping::Datum &r);
-bool operator!=(const mapping::Datum &l,const mapping::Datum &r);
+
 
 
 #endif /* DATUM_HPP_ */

@@ -12,8 +12,14 @@
 #include <valarray>
 #include "algebra.hpp"
 
+
 namespace mapping {
 
+bool operator==(const Vector &l,const Vector &r);
+bool operator!=(const Vector &l,const Vector &r);
+
+bool operator==(const Matrix &l,const Matrix &r);
+bool operator!=(const Matrix &l,const Matrix &r);
 
 class Helmert {
 	friend bool operator==(const Helmert &l,const Helmert &r);
@@ -36,13 +42,15 @@ public:
 	virtual ~Helmert() = default;
 
 	Helmert & operator=(const Helmert &o);
-	Helmert & inverse() const;
-	Vector & operator()(Vector x) const;
+	Helmert inverse() const;
+	Vector operator()(Vector x) const;
 };
+
+bool operator==(const Helmert &l,const Helmert &r);
+bool operator!=(const Helmert &l,const Helmert &r);
 
 } /* namespace mapping */
 
-bool operator==(const mapping::Helmert &l,const mapping::Helmert &r);
-bool operator!=(const mapping::Helmert &l,const mapping::Helmert &r);
+
 
 #endif /* HELMERT_HPP_ */

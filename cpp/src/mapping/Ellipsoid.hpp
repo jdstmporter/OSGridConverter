@@ -65,11 +65,11 @@ private:
 	static void initialise();
 
 };
-
+bool operator==(const mapping::Ellipsoid &l,const mapping::Ellipsoid &r);
+bool operator!=(const mapping::Ellipsoid &l,const mapping::Ellipsoid &r);
 
 
 } /* namespace mapping */
 
-bool operator==(const mapping::Ellipsoid &l,const mapping::Ellipsoid &r);
-bool operator!=(const mapping::Ellipsoid &l,const mapping::Ellipsoid &r);
+
 #endif /* ELLIPSOID_HPP_ */

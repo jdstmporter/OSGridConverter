@@ -38,7 +38,7 @@ public:
 	double operator[](const Axis &axis) const;
 	Cartesian transform(const mapping::Helmert &helmert);
 
-	operator mapping::Vector() const { return vector; }
+	mapping::Vector vec() const { return vector; }
 };
 
 

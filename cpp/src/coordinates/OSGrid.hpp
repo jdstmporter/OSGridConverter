@@ -17,7 +17,6 @@ namespace coordinates {
 class LatitudeLongitude;
 
 class OSGrid {
-friend std::ostream & operator<<(std::ostream &o,const OSGrid &grid);
 friend bool operator==(const OSGrid &l,const OSGrid &r);
 friend bool operator!=(const OSGrid &l,const OSGrid &r);
 private:
@@ -31,13 +30,17 @@ public:
 	virtual ~OSGrid() = default;
 	
 	std::tuple<long,long> coordinates() const { return std::make_tuple(eastings,northings); }
-	
+	long N() const { return northings; }
+	long E() const { return eastings; }
 };
+
+bool operator==(const OSGrid &l,const OSGrid &r);
+bool operator!=(const OSGrid &l,const OSGrid &r);
+
+
 
 } /* namespace coordinates */
 
-std::ostream & operator<<(std::ostream &o,const coordinates::OSGrid &grid);
-bool operator==(const coordinates::OSGrid &l,const coordinates::OSGrid &r);
-bool operator!=(const coordinates::OSGrid &l,const coordinates::OSGrid &r);
+std::ostream & operator<<(std::ostream & o,const coordinates::OSGrid &g);
 
 #endif /* SRC_COORDINATES_OSGRID_HPP_ */

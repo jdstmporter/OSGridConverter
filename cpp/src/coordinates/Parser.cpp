@@ -10,6 +10,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cmath>
+#include <stdexcept>
 
 
 namespace coordinates {
@@ -100,30 +101,8 @@ Parser::Kind Parser::parsedAs() {
 	return kind;
 }
 
-std::string Parser::toString(const OSGrid &g) const {
-	try {
-		auto c=g.coordinates();
-		auto E=std::get<0>(c);
-		auto N=std::get<1>(c);
-		long e100km=E/10000;
-		long n100km=N/10000;
-		if(e100km<0 || e100km>6 || n100km<0 || n100km>12) return "OOR";
-		auto nf=19-n100km;
-		auto ef=10+e100km;
 
-		long l1=nf-(nf%5)+(ef/5);
-		long l2=(5*nf)%25 + (ef%5);
-		std::stringstream s;
-		s << Parser::gridAlphabet[l1] << Parser::gridAlphabet[l2];
-		auto e = E%100000;
-		auto n = N%100000;
-		s << " " << std::setw(5) << std::setfill('0')  << std::right << e << " " << n;
-		return s.str();
-	}
-	catch(...) {
-		return "OOR";
-	}
-}
+
 
 
 } /* namespace coordinates */

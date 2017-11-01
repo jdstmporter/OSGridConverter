@@ -24,7 +24,7 @@ private:
 		I, II, III, IIIA, IV, V, VI, VII, VIII, IX, X, XI, XII, XIIA
 	};
 
-	Ellipsoid ellipsoid;
+	static Ellipsoid ellipsoid;
 	double phi;
 	double E;
 	std::map<Tr,double> transforms;
@@ -45,6 +45,9 @@ public:
 	Pair toLatLong();
 	Pair fromLatLong();
 	
+	static double aF0() { return ellipsoid.majorAxis()*F0; }
+	static double meridional(double p) { return ellipsoid.meridional(p,phi0); }
+
 	
 };
 

@@ -7,10 +7,25 @@
 
 #include "Helmert.hpp"
 #include <stdexcept>
+#include <algorithm>
 
 using namespace boost::numeric::ublas;
 
 namespace mapping {
+
+bool operator==(const Vector &l,const Vector &r) {
+	return std::equal(l.begin(),l.end(),r.begin());
+}
+bool operator!=(const Vector &l,const Vector &r) {
+	return !std::equal(l.begin(),l.end(),r.begin());
+}
+
+bool operator==(const Matrix &l,const Matrix &r) {
+	return std::equal(l.begin1(),l.end1(),r.begin1());
+}
+bool operator!=(const Matrix &l,const Matrix &r) {
+	return !std::equal(l.begin1(),l.end1(),r.begin1());
+}
 
 
 std::valarray<unsigned> Helmert::indices(const unsigned index) {
@@ -49,26 +64,27 @@ Helmert & Helmert::operator=(const Helmert &o) {
 }
 
 
-Helmert & Helmert::inverse() const {
+Helmert Helmert::inverse() const {
 	auto it  = -prod(inv,t);
 	return Helmert(it,inv,mx);
 }
 
-Vector & Helmert::operator()(Vector x) const {
+Vector Helmert::operator()(Vector x) const {
 	return prod(mx,x)+t;
 }
 
 
 
-} /* namespace mapping */
 
-bool operator==(const mapping::Helmert &l,const mapping::Helmert &r) {
+
+bool operator==(const Helmert &l,const Helmert &r) {
 	return (l.t==r.t) && (l.mx==r.mx);
 }
-bool operator!=(const mapping::Helmert &l,const mapping::Helmert &r){
+bool operator!=(const Helmert &l,const Helmert &r){
 	return (l.t!=r.t) || (l.mx!=r.mx);
 }
 
+} /* namespace mapping */
 
 
   

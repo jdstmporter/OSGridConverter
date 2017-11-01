@@ -10,6 +10,7 @@
 
 #include <string>
 #include <regex>
+#include <iostream>
 
 
 
@@ -25,6 +26,8 @@ public:
 		Unknown,
 		Unparsed
 	};
+	static const std::string gridAlphabet;
+
 private:
 	std::string text;
 	std::pair<double,double> parameters;
@@ -36,7 +39,7 @@ private:
 	static const std::regex lonlatPM;
 	static const std::regex gridOS1;
 	static const std::regex gridOS2;
-	static const std::string gridAlphabet;
+
 
 	bool isLatLong();
 	bool isGrid();
@@ -50,10 +53,14 @@ public:
 	Kind parsedAs();
 	std::pair<double,double> & operator()() { return parameters; }
 
-	static std::string toString(const OSGrid &g) const;
+	static std::string toString(const OSGrid &g);
 
 	
 };
+
+
+
+
 
 } /* namespace coordinates */
 

@@ -11,7 +11,13 @@
 
 namespace mapping {
 
+Vector _v(const std::initializer_list<double> values) {
+	Vector v(3);
+	std::copy_n(values.begin(),3,v.begin());
+	return std::move(v);
+}
 
+Specification::Specification(const Ellipsoid::Name &n_,IList r_,IList t_,const double e_) : name(n_), t(_v(t_)), r(_v(r_)), e(e_) {};
 
 Datum::Parameters Datum::data = Datum::Parameters();
 
@@ -25,26 +31,24 @@ void Datum::initialise() {
 	data[Name::TokyoJapan] = Specification(Ellipsoid::Name::Bessel1841,{148.0,-507.0,-685.0},{0.0,0.0,0.0},0.0);
 }
 
-Vector _v(const std::initializer_list<double> values) {
-	Vector v(3);
-	std::copy_n(values.begin(),3,v.begin());
-	return std::move(v);
-}
+
+
+
 
 Datum Datum::get(const Name &key) {
 	if(data.size()==0) initialise();
 	auto spec=data[key];
-	return std::move(Datum(std::get<0>(spec),_v(std::get<1>(spec)),_v(std::get<2>(spec)),std::get<3>(spec),std::make_shared<Name>(key)));
+	return Datum(spec);
 }
 
-}
 
-bool operator==(const mapping::Datum &l,const mapping::Datum &r) {
+
+bool operator==(const Datum &l,const Datum &r) {
 	return (l.e==r.e) && (l.helmert==r.helmert);
 }
-bool operator!=(const mapping::Datum &l,const mapping::Datum &r){
+bool operator!=(const Datum &l,const Datum &r){
 	return (l.e!=r.e) || (l.helmert!=r.helmert);
 }
 
 
-
+}
