@@ -26,7 +26,6 @@ using Tag = mapping::Datum::Name;
 class OSGrid;
 
 class LatitudeLongitude {
-	friend std::ostream & operator<<(std::ostream &o,const LatitudeLongitude &ll);
 private:
 
 	double latitude;
@@ -55,11 +54,11 @@ public:
 
 };
 
-std::ostream & operator<<(std::ostream &o,const coordinates::LatitudeLongitude &ll);
+
 
 } /* namespace coordinates */
 
-
+std::ostream & operator<<(std::ostream &o,const coordinates::LatitudeLongitude &ll);
 
 
 #endif /* LATITUDELONGITUDE_HPP_ */

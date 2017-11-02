@@ -7,8 +7,13 @@
 
 #include <tests/Generator.hpp>
 #include <sstream>
+#include <iostream>
 
 namespace test {
+
+unsigned Generator::seed() {
+	return std::chrono::system_clock::now().time_since_epoch().count();
+}
 
 double Generator::random(const double lo,const double hi) {
 		return uniform(source)*(hi-lo)+lo;
@@ -23,6 +28,10 @@ coordinates::LatitudeLongitude Generator::latLong(const mapping::Datum::Name & t
 coordinates::OSGrid Generator::grid(const mapping::Datum::Name & tag) {
 	auto ll=latLong(tag);
 	return coordinates::OSGrid(ll);
+}
+
+void Generator::reset() {
+	//uniform.reset();
 }
 
 double gridDiff(const coordinates::OSGrid &g1,const coordinates::OSGrid &g2) {

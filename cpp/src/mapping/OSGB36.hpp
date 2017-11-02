@@ -46,8 +46,9 @@ public:
 	Pair fromLatLong();
 	
 	static double aF0() { return ellipsoid.majorAxis()*F0; }
-	static double meridional(double p) { return ellipsoid.meridional(p,phi0); }
-
+	static double bF0() { return ellipsoid.minorAxis()*F0; }
+	static double meridional(double p) { return ellipsoid.meridional(p,phi0)*OSGB36::bF0(); }
+	static double n(int i) { return pow(ellipsoid.N(),i); }
 	
 };
 

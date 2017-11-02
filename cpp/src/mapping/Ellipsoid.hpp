@@ -22,6 +22,16 @@ class Ellipsoid {
 	friend bool operator==(const Ellipsoid &l,const Ellipsoid &r);
 	friend bool operator!=(const Ellipsoid &l,const Ellipsoid &r);
 private:
+
+	struct Axes {
+		double a;
+		double b;
+		double f;
+
+		Axes(const double a_=1.0,const double b_=1.0,double f_=0.0) : a(a_), b(b_), f(f_) {};
+		virtual ~Axes()=default;
+	};
+
 	double A;
 	double B;
 	double f;
@@ -33,9 +43,9 @@ private:
 public:
 
 
-	Ellipsoid(const double a=1.0,const double b=1.0) noexcept;
-	Ellipsoid(const std::vector<double> &params) noexcept : Ellipsoid(params[0],params[1]) {};
-	Ellipsoid(const Ellipsoid &other) noexcept : Ellipsoid(other.A,other.B) {};
+	Ellipsoid(const double a=1.0,const double b=1.0, double f=0.0) noexcept;
+	Ellipsoid(const Axes &a) noexcept : Ellipsoid(a.a,a.b,a.f) {};
+	Ellipsoid(const Ellipsoid &other) noexcept : Ellipsoid(other.A,other.B,other.f) {};
 	Ellipsoid & operator==(const Ellipsoid &other) noexcept;
 	virtual ~Ellipsoid() = default;
 	
@@ -44,6 +54,7 @@ public:
 	double majorAxis() const noexcept { return A; }
 	double minorAxis() const noexcept { return B; }
 	double flattening() const noexcept { return f; }
+	double N() const noexcept { return n; }
 	
 	double meridional(double phi,double phi0) noexcept;
 
@@ -60,7 +71,7 @@ public:
 
 
 private:
-	using Parameters=std::map<Name,std::vector<double>>;
+	using Parameters=std::map<Name,Axes>;
 	static Parameters ellipsoids;
 	static void initialise();
 

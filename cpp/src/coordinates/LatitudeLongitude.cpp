@@ -20,28 +20,29 @@ namespace coordinates {
 using Axis = Cartesian::Axis;
 
 std::pair<double,double> gridToLatLong(const OSGrid &grid,Tag tag) {
-	double p=mapping::OSGB36::phi0;
+
 	double dN=double(grid.N()-mapping::OSGB36::N0);
 	double M=0.0;
+	double phi=mapping::OSGB36::phi0;
 
 	do {
-		p+=(dN-M)/mapping::OSGB36::aF0();
-		M=mapping::OSGB36::meridional(p);
+		phi+=(dN-M)/mapping::OSGB36::aF0();
+		M=mapping::OSGB36::meridional(phi);
 	} while(dN-M >= 1.0e-5);
-	auto e=grid.E();
-	mapping::OSGB36 v(p,e);
+
+	mapping::OSGB36 v(phi,grid.E());
 	auto pair=v.toLatLong();
 
-	auto phi=degrees(std::get<0>(pair));
-	auto lambda=degrees(std::get<0>(pair));
+	auto ph=degrees(std::get<0>(pair));
+	auto lambda=degrees(std::get<1>(pair));
 
 	if(tag==Tag::OSGB36) {
-		return std::make_pair(phi,lambda);
+		return std::make_pair(ph,lambda);
 	}
 	else {
-		LatitudeLongitude point(phi,lambda,Tag::OSGB36);
+		LatitudeLongitude point(ph,lambda,Tag::OSGB36);
 		point=point.transform(tag);
-		return std::make_pair(point.latitude,point.longitude);
+		return std::make_pair(point.Latitude(),point.Longitude());
 	}
 }
 
@@ -49,20 +50,25 @@ LatitudeLongitude::LatitudeLongitude(const Cartesian &cartesian,Tag tag) : Latit
 
 LatitudeLongitude::LatitudeLongitude(const std::string &str,Tag tag) : datum(mapping::Datum::get(tag)), dTag(tag) {
 	Parser p(str);
-
-	if(p.parsedAs()==Parser::Kind::LatLong) {
+	auto kind=p.parse();
+	switch(kind) {
+	case Parser::Kind::LatLong: {
 		auto coordinates=p();
-		latitude=coordinates.first;
-		longitude=coordinates.second;
+		latitude=coordinates.lat;
+		longitude=coordinates.lon;
+		break;
 	}
-	else if(p.parsedAs()==Parser::Kind::LatLong) {
+	case Parser::Kind::Grid: {
 		auto coordinates=p();
-		OSGrid g(coordinates.second,coordinates.first);
+		OSGrid g(coordinates.N,coordinates.E);
 		auto pair=gridToLatLong(g,tag);
 		latitude=pair.first;
 		longitude=pair.second;
+		break;
 	}
-	else throw std::runtime_error("Invalid string representation for latitude / longitude type");
+	default:
+		throw std::runtime_error("Invalid string representation for latitude / longitude type");
+	}
 }
 
 LatitudeLongitude::LatitudeLongitude(const mapping::Vector &v,Tag tag) : datum(mapping::Datum::get(tag)), dTag(tag) {
@@ -96,16 +102,18 @@ LatitudeLongitude  LatitudeLongitude::transform( Tag newTag) const {
 	}
 }
 
-std::ostream & operator<<(std::ostream &o,const coordinates::LatitudeLongitude &ll) {
-	char ns=(ll.latitude>=0.0) ? 'N' : 'S';
-	char ew=(ll.longitude>=0.0) ? 'E' : 'W';
+} /* namespace coordinates */
 
-	o << std::fixed << std::setprecision(5) << fabs(ll.latitude) << ns << "," << fabs(ll.longitude) << ew;
+std::ostream & operator<<(std::ostream &o,const coordinates::LatitudeLongitude &ll) {
+	char ns=(ll.Latitude()>=0.0) ? 'N' : 'S';
+	char ew=(ll.Longitude()>=0.0) ? 'E' : 'W';
+
+	o << std::fixed << std::setprecision(5) << fabs(ll.Latitude()) << ns << "," << fabs(ll.Longitude()) << ew;
 	return o;
 }
 
 
-} /* namespace coordinates */
+
 
 
 

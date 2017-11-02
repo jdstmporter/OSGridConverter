@@ -37,4 +37,6 @@ void ConversionTestBase::testAction() {
 	CPPUNIT_ASSERT( good == count );
 }
 
+
+
 } /* namespace test */

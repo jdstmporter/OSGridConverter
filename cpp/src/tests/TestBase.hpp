@@ -9,8 +9,11 @@
 #define SRC_TESTS_TESTBASE_HPP_
 
 #include <cppunit/TestCase.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/TestCaller.h>
 #include <list>
 #include <string>
+#include <type_traits>
 #include <mapping.hpp>
 #include "Generator.hpp"
 
@@ -32,7 +35,7 @@ protected:
 	
 	
 public:
-	ConversionTestBase(std::string name) : CppUnit::TestCase(name), generator(), tag(mapping::Datum::Name::WGS84), nTests(1000),errors(), good(0), count(0),crashes(0) {};
+	ConversionTestBase(std::string name) : CppUnit::TestCase(name),  nTests(1000),errors(), good(0), count(0),crashes(0), generator(), tag(mapping::Datum::Name::OSGB36) {};
 	virtual ~ConversionTestBase() = default;
 	
 	virtual void setUp() {};
@@ -40,6 +43,8 @@ public:
 	void testAction();
 
 };
+
+
 
 } /* namespace test */
 

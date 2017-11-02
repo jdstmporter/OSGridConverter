@@ -28,12 +28,34 @@ public:
 	};
 	static const std::string gridAlphabet;
 
+	struct Result {
+		Parser::Kind kind;
+		double E, N;
+		double lat, lon;
+
+		Result() : kind(Kind::Unknown) , E(), N(), lat(), lon() {};
+		Result(Parser::Kind kind_,double first,double second) : kind(kind_), E(), N(), lat(), lon() {
+			switch(kind) {
+			case Kind::LatLong:
+				lat=first;
+				lon=second;
+				break;
+			case Kind::Grid:
+				E=first;
+				N=second;
+				break;
+			default:
+				break;
+			}
+		}
+		Result(Parser::Kind kind,std::pair<double,double> p) : Result(kind,p.first,p.second) {};
+	};
+
 private:
 	std::string text;
-	std::pair<double,double> parameters;
+	Result parameters;
 
 	std::smatch m;
-	Kind kind;
 
 	static const std::regex lonlatNSEW;
 	static const std::regex lonlatPM;
@@ -41,17 +63,17 @@ private:
 	static const std::regex gridOS2;
 
 
-	bool isLatLong();
-	bool isGrid();
-	bool completeGrid(const unsigned e,const unsigned n);
+	Result isLatLong();
+	Result isGrid();
+	Result completeGrid(const std::string & e,const std::string & n);
 
 public:
 
-	Parser(const std::string & line) : text(line), parameters(), m(), kind(Kind::Unparsed) {};
+	Parser(const std::string & line) : text(line), parameters(), m() {};
 	virtual ~Parser() = default;
 	
-	Kind parsedAs();
-	std::pair<double,double> & operator()() { return parameters; }
+	Kind parse();
+	Result & operator()() { return parameters; }
 
 	static std::string toString(const OSGrid &g);
 

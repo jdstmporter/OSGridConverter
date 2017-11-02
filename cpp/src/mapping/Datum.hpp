@@ -62,13 +62,9 @@ public:
 	Vector invert(const Vector &v) const { return helmert.inverse()(v); }
 
 
-
 	static Datum get(const Name &key);
 
-private:
-	using Parameters=std::map<Datum::Name,Specification>;
-	static Parameters data;
-	static void initialise();
+
 
 };
 

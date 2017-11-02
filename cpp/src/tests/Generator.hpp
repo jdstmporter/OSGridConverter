@@ -11,22 +11,29 @@
 #include <random>
 #include <string>
 #include <coordinates.hpp>
+#include <chrono>
 
 namespace test {
 
 class Generator {
 private:
 	int n;
-	std::default_random_engine source;
+	std::mt19937 source;
 	std::uniform_real_distribution<double> uniform;
+
+	static unsigned seed();
 
 protected:
 	double random(const double lo,const double hi);
 public:
-	Generator(int n_=3) : n(n_), source(), uniform() {};
+	Generator(int n_=3) : n(n_), source(Generator::seed()), uniform(0,1) {
+
+	};
 
 	coordinates::LatitudeLongitude latLong(const mapping::Datum::Name & tag = mapping::Datum::Name::WGS84);
 	coordinates::OSGrid grid(const mapping::Datum::Name & tag = mapping::Datum::Name::WGS84);
+
+	void reset();
 		
 };
 

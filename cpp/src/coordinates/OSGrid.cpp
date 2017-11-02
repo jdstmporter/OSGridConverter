@@ -10,6 +10,8 @@
 #include "LatitudeLongitude.hpp"
 #include "../mapping/OSGB36.hpp"
 #include <stdexcept>
+#include <iostream>
+#include <sstream>
 #include <iomanip>
 
 namespace coordinates {
@@ -17,20 +19,23 @@ namespace coordinates {
 
 OSGrid::OSGrid(const std::string & slug) {
 	Parser p(slug);
-	if(p.parsedAs()==Parser::Kind::Grid) {
+	if(p.parse()==Parser::Kind::Grid) {
 			auto coordinates=p();
-			eastings=long(coordinates.first);
-			northings=long(coordinates.second);
+			eastings=long(coordinates.E);
+			northings=long(coordinates.N);
 		}
 		else throw std::runtime_error("Invalid string representation for OS Grid type");
 }
 
 OSGrid::OSGrid(const LatitudeLongitude &latlong) {
-	LatitudeLongitude ll = latlong.is(Tag::OSGB36) ? latlong : latlong.transform();
-	auto g=mapping::OSGB36({ll.phi(),ll.lambda()});
+	auto ll=latlong;
+	if(!ll.is(Tag::OSGB36)) {
+		ll=ll.transform();
+	}
+	auto g=mapping::OSGB36(ll.phi(),ll.lambda());
 	auto ne=g.fromLatLong();
-	northings=long(std::get<0>(ne));
-	eastings=long(std::get<1>(ne));
+	northings=long(std::get<1>(ne));
+	eastings=long(std::get<0>(ne));
 }
 
 bool operator==(const OSGrid &l,const OSGrid &r) {
@@ -43,14 +48,24 @@ bool operator!=(const OSGrid &l,const OSGrid &r) {
 
 } /* namespace coordinates */
 
+std::string padIt(const long value,const unsigned n) {
+	std::stringstream s;
+	s << std::string(n,'0') << value;
+	auto str=s.str();
+	return str.substr(str.size()-n,n);
+}
+
 std::ostream & operator<<(std::ostream &o,const coordinates::OSGrid &g) {
 	try {
-		auto c=g.coordinates();
-		auto E=std::get<0>(c);
-		auto N=std::get<1>(c);
-		long e100km=E/10000;
-		long n100km=N/10000;
-		if(e100km<0 || e100km>6 || n100km<0 || n100km>12) throw std::runtime_error("OOR");
+
+		auto E=g.E();
+		auto N=g.N();
+		long e100km=E/100000;
+		long n100km=N/100000;
+		if(e100km<0 || e100km>6 || n100km<0 || n100km>12) {
+			std::cerr << "Out of range" << std::endl;
+			throw std::runtime_error("OOR");
+		}
 		auto nf=19-n100km;
 		auto ef=10+e100km;
 
@@ -59,7 +74,7 @@ std::ostream & operator<<(std::ostream &o,const coordinates::OSGrid &g) {
 		o << coordinates::Parser::gridAlphabet[l1] << coordinates::Parser::gridAlphabet[l2];
 		auto e = E%100000;
 		auto n = N%100000;
-		o << " " << std::setw(5) << std::setfill('0')  << std::right << e << " " << n;
+		o << " " << padIt(e,5) << " " << padIt(n,5);
 	}
 	catch(...) {
 		o << "OOR";
