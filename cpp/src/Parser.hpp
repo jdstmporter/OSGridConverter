@@ -13,27 +13,61 @@
 #include <iostream>
 
 
-
+/**
+ * \class coordinates::Parser
+ * \brief Parses string representations of co-ordinates into appropriate objects
+ *
+ * Takes a string representation of co-ordinates and converts it to the appropriate coordinate
+ * object.  Valid formats are:
+ * Format                                   |  Parsed as                     | Description
+ * -----------------------------------------|--------------------------------|------------
+ * (+/-) nnn.nnnn[N/S], (+/-) eee.eeee[E/W] | coordinates::LatitudeLongitude | expressed in degrees North/South and East/West
+ * (+/-) nnn.nnnn, (+/-) eee.eeee           | coordinates::LatitudeLongitude | expressed in degrees North and East
+ * LL nnnnnn eeeeee                         | coordinates::OSGrid            | Ordnance Survey map grid reference where LL is thre alphabetic grid square, nnnnnn is northings and eeeeee is eastings
+ */
 namespace coordinates {
 
 class OSGrid;
 
 class Parser {
 public:
+	/**
+	 * Result of the parse
+	 */
 	enum class Kind {
-		LatLong,
-		Grid,
-		Unknown,
-		Unparsed
+		LatLong,	/*!< represents coordinates::LatitudeLongitude*/
+		Grid,		/*!< represents coordinates::OSGrid*/
+		Unknown,	/*!< not recognised */
+		Unparsed    /*!< not yet parsed */
 	};
+	/**
+	 * The alphabet used in OSGrid grid squares
+	 *
+	 * Ordinance Survey grid square names are made up of two characters from the alphabet
+	 * "ABCDEFGHJKLMNOPQRSTUVWXYZ".
+	 */
 	static const std::string gridAlphabet;
 
+	/**
+	 * \struct coordinates::Parser::Result
+	 * \brief Results from parsing a string
+	 */
 	struct Result {
-		Parser::Kind kind;
-		double E, N;
-		double lat, lon;
+		Parser::Kind kind;	/*!< the identified kind of the string */
+		double E;		/*!< easting value if it's a grid reference */
+		double N;		/*!< northing value if it's a grid reference */
+		double lat;		/*!< latitude value if it's latitude / longitude */
+		double lon;		/*!< longitude value if it's latitude / longitude */
 
 		Result() : kind(Kind::Unknown) , E(), N(), lat(), lon() {};
+		/**
+		 * Initialise with given values
+		 *
+		 * Initialise depending on \a kind
+		 * \param kind the Kind of the result
+		 * \param first easting if \a kind is Kind::Grid, latitude if it is Kind::LatLong
+		 * \param second northing if \a kind is Kind::Grid, longitude if it is Kind::LatLong
+		 */
 		Result(Parser::Kind kind_,double first,double second) : kind(kind_), E(), N(), lat(), lon() {
 			switch(kind) {
 			case Kind::LatLong:
@@ -48,6 +82,13 @@ public:
 				break;
 			}
 		}
+		/**
+		 * Initialise from a pair
+		 *
+		 * The same as Result(kind,p.first,p.second)
+		 * \param kind the Kind of the result
+		 * \param p the values
+		 */
 		Result(Parser::Kind kind,std::pair<double,double> p) : Result(kind,p.first,p.second) {};
 	};
 

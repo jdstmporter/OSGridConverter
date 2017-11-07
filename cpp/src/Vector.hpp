@@ -13,14 +13,20 @@
 
 namespace util {
 
+
+
 class Vector {
+	friend void swap(Vector &v1,Vector &v2);
 public:
+
 	using vec_t = std::vector<double>;
 	using  iterator = vec_t::iterator;
+
 	using  const_iterator = vec_t::const_iterator;
 private:
 	std::vector<double> v;
 public:
+
 	Vector(const int &n) : v(n,0.0) {};
 	Vector(std::initializer_list<double> values) : v(values) {};
 	Vector(const std::vector<double> &vv) : v(vv) {};
@@ -29,8 +35,11 @@ public:
 	Vector(Vector &&o) : v(std::move(o.v)) {};
 	virtual ~Vector() = default;
 
-	Vector & operator=(const Vector &);
-	Vector & operator=(Vector &&);
+
+	Vector & operator=(const Vector &o) ;
+	Vector & operator=(Vector &&o);
+
+
 
 	iterator begin() { return v.begin(); }
 	iterator end() { return v.end(); }
@@ -38,8 +47,11 @@ public:
 	const_iterator cend() const { return v.cend(); }
 
 	int size() const { return v.size(); };
+
 	double norm() const;
+
 	double normSquared() const;
+
 	double & operator[](int n) { return v[n]; }
 	double operator()(int n) const { return v[n]; }
 
@@ -47,16 +59,23 @@ public:
 
 };
 
+
 Vector operator+(const Vector &l,const Vector &r);
+
 Vector operator*(const Vector &l,const double s);
-Vector operator*(const double s,const Vector &l);
+Vector operator*(const double s,const Vector &r);
 Vector operator-(const Vector &l,const Vector &r);
+
 Vector operator-(const Vector &l);
 double operator|(const Vector &l,const Vector &r);
+
 bool operator==(const Vector &l,const Vector &r);
 bool operator!=(const Vector &l,const Vector &r);
 
+void swap(Vector &v1,Vector &v2);
 
 } /* namespace util */
+
+
 
 #endif /* VECTOR_HPP_ */

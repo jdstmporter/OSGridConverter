@@ -19,18 +19,19 @@ using test_t = std::shared_ptr<test::TestBase>;
 
 class TestSuite {
 private:
+	mapping::Datum::Name tag;
 	std::vector<test_t> tests;
 	int nTests;
 	bool verbose;
 
 public:
-	TestSuite(const int nTests_,const bool verbose_) :
-		tests(), nTests(nTests_), verbose(verbose_) {}
+	TestSuite(const mapping::Datum::Name &tag_=mapping::Datum::Name::WGS84,const int nTests_=1000,const bool verbose_=false) :
+		tag(tag_), tests(), nTests(nTests_), verbose(verbose_) {}
 	virtual ~TestSuite() = default;
 
 	template<class T>
 	void add() {
-		auto p=std::make_shared<T>(nTests,verbose);
+		auto p=std::make_shared<T>(tag,nTests,verbose);
 		auto pp=std::static_pointer_cast<TestBase>(p);
 		tests.push_back(pp);
 	}

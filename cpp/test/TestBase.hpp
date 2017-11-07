@@ -40,9 +40,9 @@ protected:
 
 
 public:
-	TestBase(const std::string &name_,const int n, const bool v) :
+	TestBase(const std::string &name_,const mapping::Datum::Name &tag_,const int n, const bool v) :
 		name(name_), nTests(n), errors(), good(0), count(0),crashes(0),
-		verbose(v), generator(), tag(mapping::Datum::Name::OSGB36) {};
+		verbose(v), generator(), tag(tag_) {};
 	virtual ~TestBase() = default;
 	
 	virtual void setUp() {};

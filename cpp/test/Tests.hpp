@@ -19,8 +19,8 @@ namespace test {
 class GridToLatLong : public TestBase {
 
 public:
-	GridToLatLong(const int nTests,const bool verbose) :
-		TestBase("Grid To LatLong test",nTests,verbose) {};
+	GridToLatLong(const mapping::Datum::Name &tag,const int nTests,const bool verbose) :
+		TestBase("Grid To LatLong test",tag,nTests,verbose) {};
 	virtual ~GridToLatLong() = default;
 protected:
 	virtual int action();
@@ -29,8 +29,8 @@ protected:
 class GridToLatLongViaText : public TestBase {
 
 public:
-	GridToLatLongViaText(const int nTests,const bool verbose) :
-		TestBase("Grid To LatLong (via text) test",nTests,verbose) {};
+	GridToLatLongViaText(const mapping::Datum::Name &tag,const int nTests,const bool verbose) :
+		TestBase("Grid To LatLong (via text) test",tag,nTests,verbose) {};
 	virtual ~GridToLatLongViaText() = default;
 protected:
 	virtual int action();
@@ -39,8 +39,8 @@ protected:
 class LatLongToGrid : public TestBase {
 
 public:
-	LatLongToGrid(const int nTests,const bool verbose) :
-		TestBase("LatLong to Grid test",nTests,verbose) {};
+	LatLongToGrid(const mapping::Datum::Name &tag,const int nTests,const bool verbose) :
+		TestBase("LatLong to Grid test",tag,nTests,verbose) {};
 	virtual ~LatLongToGrid() = default;
 protected:
 	virtual int action();

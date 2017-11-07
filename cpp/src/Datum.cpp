@@ -8,9 +8,25 @@
 #include "Datum.hpp"
 #include "Vector.hpp"
 #include <algorithm>
+#include <map>
 
 
 namespace mapping {
+
+
+std::map<Datum::Name,std::string> tags {
+	std::make_pair(Datum::Name::WGS84,"WGS84"),
+	std::make_pair(Datum::Name::NTF,"NTF"),
+	std::make_pair(Datum::Name::NAD83,"NAD83"),
+	std::make_pair(Datum::Name::OSGB36,"OSGB36"),
+	std::make_pair(Datum::Name::ED50,"ED50"),
+	std::make_pair(Datum::Name::Irl1975,"Irl1975"),
+	std::make_pair(Datum::Name::TokyoJapan,"TokyoJapan")
+};
+
+std::string name(const Datum::Name & n)  {
+	return tags.at(n);
+}
 
 
 Datum::Datum(const Ellipsoid::Name & model,const util::Vector &t,const util::Vector &r,const double s) :

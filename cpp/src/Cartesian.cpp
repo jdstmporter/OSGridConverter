@@ -14,6 +14,7 @@
 
 namespace coordinates {
 
+
 Cartesian::Cartesian(const double x,const double y,const double z) : vector({x,y,z}) {}
 
 

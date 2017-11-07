@@ -12,37 +12,46 @@
 #include <iostream>
 #include <string>
 
-const int NTests=1000;
+const mapping::Datum::Name tag=mapping::Datum::Name::OSGB36;
 
+bool isVerbose() {
+#ifdef VERBOSE
+	return bool(VERBOSE);
+#else
+	return false;
+#endif
+}
 
+int NTests() {
+#ifdef NTESTS
+	return int(NTESTS);
+#else
+	return 1000;
+#endif
+}
+
+int TestIndex() {
+#ifdef TEST_INDEX
+	return int(TEST_INDEX);
+#else
+	return 0;
+#endif
+}
 
 int main(int argc,char *argv[]) {
 
 
 	try {
-		int nTests=1000;
-		bool verbose=false;
+		bool verbose=isVerbose();
+		int nTests=NTests();
+		int test=TestIndex();
 
-		if(argc>=2) {
-			try {
-				nTests=std::stol(argv[1]);
-			}
-			catch(...) {}
-		}
-		if(argc>=3) {
-			try {
-				int n=std::stol(argv[2]);
-				verbose=(n!=0);
-			}
-			catch(...) {}
-		}
-
-		test::TestSuite suite(nTests,verbose);
+		test::TestSuite suite(tag,nTests,verbose);
 		suite.add<test::GridToLatLong>();
 		suite.add<test::LatLongToGrid>();
 		suite.add<test::GridToLatLongViaText>();
 
-		test::test_t t=suite[(int)TEST_INDEX];
+		test::test_t t=suite[test];
 		t->run();
 
 		std::cout << *t;

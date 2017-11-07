@@ -1,0 +1,199 @@
+/**
+ * \class util::Vector Vector.hpp
+ * \brief vector algebra class representing a vector in n-dimensional space
+ *
+ * A class representing a geometrical vector in n-dimensional space, with support
+ * for standard vector algebra operations (addition, inner-product, matrix operations,
+ * etc).
+ *
+ * The class is move constructible, move assignable and swappable.
+ *
+ * \typedef Vector::vec_t
+ * the underlying STL container class
+ *
+ * \typedef Vector::iterator
+ * the STL iterator for a Vector
+ *
+ * \typedef Vector::const_iterator
+ * the STL const iterator for a Vector */
+/**
+ * \fn Vector::Vector(const int &n)
+ * \brief Constructs zero vector
+ * \param n the length of the vector to construct
+ *
+ * Constructs a zero vector with \a n entries
+ *
+ * \fn Vector::Vector(std::initializer_list<double> values)
+ * \brief Constructs vector from values in a std::initializer_list
+ * \param values the list of values
+ *
+ * Constructs a vector whose members are the values provided in a std::initializer_list
+ * Intended for use with literal (e.g. inline definitions).
+ *
+ * \fn Vector::Vector(const std::vector<double> &vv)
+ * \brief copies values from std::vector into a new Vector
+ * \param vv values to copy into the new Vector
+ *
+ * Construct a Vector from a std::vector of values.  Copies a reference of the
+ * provided vector of values.
+ *
+* \fn Vector::Vector(std::vector<double> &&vv)
+ * \brief moves values from std::vector into a new Vector
+ * \param vv values to move into the new Vector
+ *
+ * Move construct a Vector from a std::vector of values.  Moves values from the
+ * provided vector of values into the Vector's underlying storage
+ *
+ * \fn Vector::Vector(const Vector &o)
+ * \brief Copy constructor
+ * \param o the Vector to copy
+ *
+ * Standard copy constructor
+ *
+ *
+ * \fn Vector::Vector(Vector &&o)
+ * \brief Move constructor
+ * \param o the Vector to move into the new Vector
+ *
+ * Standard move constructor
+ *
+ * \fn Vector & Vector::operator=(const Vector &o)
+ * \brief Standard copy assignment operator
+ * \param o Vector to copy and assign to the target
+ * \return a copy of \p o
+ *
+ * Standard copy assignment operator
+ *
+ * \fn Vector & Vector::operator=(Vector &&o)
+ * \brief Standard move assignment operator
+ * \param o Vector to move into the target
+ * \return a move of \p o
+ *
+ * Standard move assignment operator
+ *
+ * \fn Vector::iterator Vector::begin()
+ * \brief Iterator pointing to start of vector
+ * \return Vector::iterator pointing to first value of vector
+ *
+ * \fn Vector::iterator Vector::end()
+ * \brief Iterator pointing beyond end of vector
+ * \return Vector::iterator pointing to beyond the final value of vector
+ *
+ * \fn Vector::const_iterator Vector::cbegin()
+ * \brief Const iterator pointing to start of vector
+ * \return Vector::const_iterator pointing to first value of vector
+ *
+ * \fn Vector::const_iterator Vector::cend()
+ * \brief Const iterator pointing beyond end of vector
+ * \return Vector::const_iterator pointing to beyond the final value of vector
+ *
+ * \fn int Vector::size() const
+ * \brief Size of the vector
+ * \return number of components in vector
+ *
+ * \fn double Vector::norm() const
+ * \brief Euclidian norm
+ * \return The Euclidian norm of the vector
+ *
+ * The length of the vector, calculated as the positive
+ * square root of the sum of the squares of its co-ordinate values.
+ * Equal to the positive square-root of Vector::normSquared()
+ *
+ * \fn double Vector::normSquared() const
+ * \brief Euclidian norm squared
+ * \return The Euclidian norm squared of the vector
+ *
+ * The square of the length of the vector, calculated as the 
+ * sum of the squares of its co-ordinate values.
+ * Equal to the square of Vector::normSquared()
+ *
+ * \fn double & Vector::operator[](int n)
+ * \brief Subscript (\b read/write)
+ * \param n index to item referenced (counting 0 up)
+ * \return reference to value at index \p n
+ *
+ * Returns reference to the value at index \a n in the vector (counting 0 up)
+ *
+ * \fn double Vector::operator()(int n) const
+ * \brief Subscript (\b read-only)
+ * \param n index to item returned (counting 0 up)
+ * \return value at index \p n
+ *
+ * Returns value at index \a n in the vector (counting 0 up)
+ *
+ * \fn Vector operator+(const Vector &l,const Vector &r) 
+ * \relates util::Vector
+ * \brief vector sum operator
+ * \details Returns the algebraic sum of two vectors of equal size
+ * \param l left-hand-side vector
+ * \param r right-hand-side vector
+ * \return \a l+r
+ *
+ * \fn Vector operator-(const Vector &l,const Vector &r) 
+ * \relates util::Vector
+ * \brief vector difference operator
+ * \details Returns the algebraic difference of two vectors of equal size
+ * \param l left-hand-side vector
+ * \param r right-hand-side vector
+ * \return \a l-r
+ *
+ * \fn Vector operator*(const Vector &l,const double s)
+ * \relates util::Vector
+ * \brief vector - scalar product
+ * \details Multiplies each component of the vector by the scalar
+ * \param l left-hand-side vector
+ * \param s right-hand-side scalar
+ * \return \a ls
+ * 
+ * \fn Vector operator*(const double s,const Vector &r)
+ * \relates util::Vector
+ * \brief scalar - vector product
+ * \details Multiplies each component of the vector by the scalar
+ * \param s right-hand-side scalar
+ * \param r left-hand-side vector
+ * \return \a sr
+ *
+ * \fn Vector operator-(const Vector &l)
+ *  \relates util::Vector
+ * \brief negationoperator
+ * \details Returns vector with all components negated
+ * \param l vector
+ * \return -\p l
+ *
+ * \fn double operator|(const Vector &l,const Vector &r) 
+ * \relates util::Vector
+ * \brief inner product operator
+ * \details Returns the inner product of two vectors of equal size
+ * \param l left-hand-side vector
+ * \param r right-hand-side vector
+ * \return \a l.r
+ *
+ * \fn bool operator==(const Vector &l,const Vector &r)
+ * \relates util::Vector
+ * \brief vector equality operator
+ * \details Two instances of util::Vector are equal iff they have the same size and
+ * their values at each index position are equal
+ * \param l left-hand-side vector
+ * \param r right-hand-side vector
+ * \return \a l=r
+ *
+ * \fn bool operator!=(const Vector &l,const Vector &r)
+ * \relates util::Vector
+ * \brief vector inequality operator
+ * \details Two instances of util::Vector are unequal iff they have different sizes or
+ * their values at some index position are unequal
+ * \param l left-hand-side vector
+ * \param r right-hand-side vector
+ * \return \a l<>r
+ *
+ * \fn void swap(Vector &v1,Vector &v2)
+ * \relates util::Vector
+ * \brief swap function
+ * \param v1 first vector to swap
+ * \param v2 second vector to swap
+ * \details Swaps two vectors; implements std::swap for the type util::Vector 
+ */
+ 
+
+	 
+

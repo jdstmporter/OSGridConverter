@@ -17,30 +17,44 @@
 namespace util {
 
 class Matrix {
+	friend void swap(Matrix &v1,Matrix &v2);
 public:
-	using  vec_t = std::vector<double>;
-	using  iterator = vec_t::iterator;
-	using  const_iterator = vec_t::const_iterator;
+	using  mx_t = std::vector<double>;
+	using  iterator = mx_t::iterator;
+	using  const_iterator = mx_t::const_iterator;
 private:
-	std::vector<double> v;
-	int rows;
-	int columns;
+	int r;
+	int c;
+	std::vector<double> rows;
+
+
 
 public:
-	Matrix (const int r,const int c) : v(r*c,0.0), rows(r), columns(c) {};
-	Matrix (const int r,const int c, const std::vector<double> &vec) : v(vec), rows(r), columns(c) {};
-	Matrix (const int r,const int c, std::vector<double> &&vec) : v(vec), rows(r), columns(c) {};
-	Matrix (const int r,const double diag=1.0);
+	Matrix (const int r_,const int c_) : r(r_), c(c_) , rows(r*c,0) {};
+	Matrix(const int r_,const int c_, std::initializer_list<double> values) : r(r_), c(c_) , rows(values) {};
+	Matrix(const int r_,const int c_, const std::vector<double> & v) : r(r_), c(c_), rows(v) {};
+	Matrix(const int r_,const int c_, std::vector<double> && v) : r(r_), c(c_), rows(v) {};
+	Matrix (const int r_,const double diag=1.0);
 
-	int nRows() const { return rows; }
-	int nColumns() const { return columns; }
-	int size() const { return v.size(); }
-	iterator begin() { return v.begin(); }
-	iterator end() { return v.end(); }
-	const_iterator cbegin() const { return v.cbegin(); }
-	const_iterator cend() const { return v.cend(); }
+	Matrix (const Matrix &o) : r(o.r), c(o.c), rows(o.rows)  {};
+	Matrix (Matrix &&o) : r(o.r), c(o.c), rows(std::move(o.rows))  {};
+	virtual ~Matrix() = default;
 
-	double &operator()(const int r,const int j);
+	Matrix & operator=(const Matrix &o);
+	Matrix & operator=(Matrix &&o);
+
+	static Matrix ID(const int n=3) { return Matrix(n); }
+	static Matrix Zero(const int r,const int c) { return Matrix(r,c); }
+
+	const_iterator cbegin() const { return rows.cbegin(); }
+	const_iterator cend() const  { return rows.cend(); }
+	const_iterator begin()  { return rows.begin(); }
+	const_iterator end()   { return rows.end(); }
+
+	int nRows() const { return r; }
+	int nColumns() const { return c; }
+
+	double &operator()(const int r_,const int j_);
 };
 
 bool equalSize(const Matrix &l,const Matrix &r);
@@ -55,6 +69,7 @@ Matrix operator*(const double s,const Matrix &m);
 Matrix outer_prod(const Vector &l,const Vector &r);
 Vector prod(const Matrix &m,const Vector &v);
 
+void swap(Matrix &v1,Matrix &v2);
 
 } /* namespace util */
 

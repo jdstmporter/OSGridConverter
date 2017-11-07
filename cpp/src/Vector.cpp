@@ -13,7 +13,7 @@
 
 namespace util {
 
-Vector & Vector::operator =(const Vector & o) {
+Vector & Vector::operator =(const Vector & o)  {
 	v=o.v;
 	return *this;
 }
@@ -72,7 +72,9 @@ bool operator!=(const Vector &l,const Vector &r) {
 	return !std::equal(l.cbegin(),l.cend(),r.cbegin());
 }
 
-
+void swap(Vector &v1,Vector &v2) {
+	v1.v.swap(v2.v);
+}
 
 
 } /* namespace util */

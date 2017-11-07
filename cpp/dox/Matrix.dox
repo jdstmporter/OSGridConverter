@@ -1,0 +1,195 @@
+/**
+ * \class util::Matrix Matrix.hpp
+ * \brief vector algebra class representing a general r x c matrix
+ *
+ * A class representing a r x c real-valued matrix, with support
+ * for standard vector algebra operations (addition, inner-product, matrix-vector operations,
+ * etc).
+ *
+ * The class is move constructible, move assignable and swappable.
+ *
+ * \typedef Matrix::mx_t
+ * the underlying STL container class
+ *
+ * \typedef Matrix::iterator
+ * the STL iterator for a Matrix
+ *
+ * \typedef Matrix::const_iterator
+ * the STL const iterator for a Matrix 
+ *
+ * \fn Matrix::Matrix(const int &r,const int &c)
+ * \brief Constructs zero matrix of size \p r x \p c
+ * \param r the number of rows
+ * \param c the number of columns
+ *
+ * \fn Matrix::Matrix(const int &r,const int &c,std::initializer_list<double> values)
+ * \brief Constructs matrix from values in a std::initializer_list
+ * \param r the number of rows
+ * \param c the number of columns
+ * \param values the list of values
+ *
+ * Constructs a matrix whose members are the values provided in a std::initializer_list
+ * Intended for use with literal (e.g. inline definitions).
+ *
+ * \fn Matrix::Matrix(const int &r,const int &c,const std::vector<double> &vv)
+ * \brief copies values from std::vector into a new Matrix
+ * \param r the number of rows
+ * \param c the number of columns
+ * \param vv values to copy into the new Vector
+ *
+ * Construct a Matrix from a std::vector of values.  Copies a reference of the
+ * provided vector of values.
+ *
+ * \fn Matrix::Matrix(const int &r,const int &c,std::vector<double> &&vv)
+ * \brief moves values from std::vector into a new Vector
+ * \param r the number of rows
+ * \param c the number of columns
+ * \param vv values to move into the new Vector
+ *
+ * Move construct a Matrix from a std::vector of values.  Moves values from the
+ * provided vector of values into the Matrix's underlying storage
+ *
+ * \fn Matrix::Matrix(const Matrix &o)
+ * \brief Copy constructor
+ * \param o the Matrix to copy
+ *
+ * Standard copy constructor
+ *
+ *
+ * \fn Matrix::Matrix(Matrix &&o)
+ * \brief Move constructor
+ * \param o the Matrix to move into the new Matrix
+ *
+ * Standard move constructor
+ *
+ * \fn Matrix & Matrix::operator=(const Matrix &o)
+ * \brief Standard copy assignment operator
+ * \param o Matrix to copy and assign to the target
+ * \return a copy of \p o
+ *
+ * Standard copy assignment operator
+ *
+ * \fn Matrix & Matrix::operator=(Matrix &&o)
+ * \brief Standard move assignment operator
+ * \param o Matrix to move into the target
+ * \return a move of \p o
+ *
+ * Standard move assignment operator
+ *
+ * \fn Matrix::iterator Matrix::begin()
+ * \brief Iterator pointing to start of matrix
+ * \return Matrix::iterator pointing to first value of matrix
+ *
+ * \fn Matrix::iterator Matrix::end()
+ * \brief Iterator pointing beyond end of matrix
+ * \return Matrix::iterator pointing to beyond the final value of matrix
+ *
+ * \fn Matrix::const_iterator Matrix::cbegin()
+ * \brief Const iterator pointing to start of matrix
+ * \return Matrix::const_iterator pointing to first value of matrix
+ *
+ * \fn Matrix::const_iterator Matrix::cend()
+ * \brief Const iterator pointing beyond end of matrix
+ * \return Matrix::const_iterator pointing to beyond the final value of matrix
+ *
+ * \fn int Vector::nRows() const
+ * \brief Number of rows
+ * \return number of rows in matrix
+ *
+ * \fn int Vector::nColumns() const
+ * \brief Number of columns
+ * \return number of columns in matrix
+ *
+ * \fn double & Vector::operator()(const int r,const int c)
+ * \brief Subscript (\b read-write)
+ * \param r index to row of item returned (counting 0 up)
+ * \param c index to column of item returned (counting 0 up)
+ * \return reference to value at index \p (r,c)
+
+ *
+ * \fn Matrix operator+(const Matrix &l,const Matrix &r) 
+ * \relates util::Matrix
+ * \brief Matrix sum operator
+ * \details Returns the algebraic sum of two matrices of equal size
+ * \param l left-hand-side Matrix
+ * \param r right-hand-side Matrix
+ * \return \a l+r
+ *
+ * \fn Matrix operator-(const Matrix &l,const Matrix &r) 
+ * \relates util::Matrix
+ * \brief Matrix difference operator
+ * \details Returns the algebraic difference of two matrices of equal size
+ * \param l left-hand-side Matrix
+ * \param r right-hand-side Matrix
+ * \return \a l-r
+ *
+ * \fn Matrix operator*(const Matrix &l,const double s)
+ * \relates util::Matrix
+ * \brief Matrix - scalar product
+ * \details Multiplies each component of the Matrix by the scalar
+ * \param l left-hand-side Matrix
+ * \param s right-hand-side scalar
+ * \return \a ls
+ * 
+ * \fn Matrix operator*(const double s,const Matrix &r)
+ * \relates util::Matrix
+ * \brief scalar - Matrix product
+ * \details Multiplies each component of the Matrix by the scalar
+ * \param s right-hand-side scalar
+ * \param r left-hand-side Matrix
+ * \return \a sr
+ *
+ * \fn util::Vector prod(const Matrix &l,const Vector &r) 
+ * \relates util::Vector
+ * \brief matrix-vector product
+ * \param l left-hand-side matrix
+ * \param r right-hand-side vector
+ * \return \a lr
+ *
+ * \fn util::Matrix outer_prod(const Vector &l,const Vector &r) 
+ * \relates util::Matrix
+ * \brief vector-vector outer product
+ * \param l left-hand-side vector
+ * \param r right-hand-side vector
+ * \return \p l transpose(\p r)
+ *
+ * \fn bool operator==(const Matrix &l,const Matrix &r)
+ * \relates util::Matrix
+ * \brief Matrix equality operator
+ * \details Two instances of util::Matrix are equal iff they have the same size and
+ * their values at each index position are equal
+ * \param l left-hand-side Matrix
+ * \param r right-hand-side Matrix
+ * \return \a l=r
+ *
+ * \fn bool operator!=(const Matrix &l,const Matrix &r)
+ * \relates util::Matrix
+ * \brief Matrix inequality operator
+ * \details Two instances of util::Matrix are unequal iff they have different sizes or
+ * their values at some index position are unequal
+ * \param l left-hand-side Matrix
+ * \param r right-hand-side Matrix
+ * \return \a l<>r
+ *
+ * \fn void swap(Matrix &v1,Matrix &v2)
+ * \relates util::Matrix
+ * \brief swap function
+ * \param v1 first Matrix to swap
+ * \param v2 second Matrix to swap
+ * \details Swaps two matrices; implements std::swap for the type util::Matrix 
+ *
+ * \fn Matrix Matrix::ID(const int n)
+ * \brief Identity matrix of specified size
+ * \param n Number of rows and columns (defaults to 3)
+ * \return Identity matrix
+ *
+ * \fn Matrix Matrix::Zero(const int r, const int c) 
+ * \brief Zero matrix
+ * \param r number of rows
+ * \param c number of columns
+ * \return Zero matrix
+ */
+ 
+
+	 
+

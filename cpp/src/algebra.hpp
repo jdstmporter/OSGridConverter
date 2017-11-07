@@ -11,8 +11,20 @@
 
 #include <cmath>
 
+/**
+ * def PI
+ * Returns the value of PI
+ */
 #define PI 3.14159265359
+/**
+ * def radians(x)
+ * Converts \a x from degrees to radians
+ */
 #define radians(x) (x*PI/180.0)
+/**
+ * def degrees(x)
+ * Converts \a x from radians to degrees
+ */
 #define degrees(x) (x*180.0/PI)
 
 
