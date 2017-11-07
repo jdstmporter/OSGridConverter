@@ -1,0 +1,12 @@
+/**
+ * \class coordinates::Parser Parser.hpp
+ * \brief Parses string representations of co-ordinates into appropriate objects
+ *
+ * Takes a string representation of co-ordinates and converts it to the appropriate coordinate
+ * object.  Valid formats are:
+ * Format                                   |  Parsed as                     | Description
+ * -----------------------------------------|--------------------------------|------------
+ * (+/-) nnn.nnnn[N/S], (+/-) eee.eeee[E/W] | coordinates::LatitudeLongitude | expressed in degrees North/South and East/West
+ * (+/-) nnn.nnnn, (+/-) eee.eeee           | coordinates::LatitudeLongitude | expressed in degrees North and East
+ * LL nnnnnn eeeeee                         | coordinates::OSGrid            | Ordnance Survey map grid reference where LL is thre alphabetic grid square, nnnnnn is northings and eeeeee is eastings
+ */

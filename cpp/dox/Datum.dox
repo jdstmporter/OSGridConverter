@@ -1,0 +1,72 @@
+
+
+/**
+ * \class mapping::Datum Datum.hpp
+ * \brief Represents a 7 parameter mapping datum
+ *
+ * A mapping datum is the data used to project the surface of the earth onto a two-dimensional surface.
+ * It consists of a model ellipsoid (i.e.. model of the Earth's geoid in the region of interest) and
+ * subsidiary information setting baseline coordinate information for the datum.  This class represents
+ * the standard 7 parameter model for a datum, the parameters being (apart from the ellipsoid)
+ * 
+ * Parameter | Type     | Description
+ *-----------|----------|-------------
+ * t         | 3-vector | Cartesian translation from true origin to Datum origin
+ * r         | 3-vector | Euler angles for rotation connecting true and Datum coordinate systems
+ * s         | scalar   | Overall scale factor
+ *
+ * The transformation described these parameters is called a Helmert transform; it is represented
+ * by the class mapping::Helmert
+ * 
+ * Parameters defining a number of well-known datums are
+ * provided: see mapping::Datum::get below.,
+ *
+ * \enum mapping::Datum::Name
+ * 'brief Tags for the well-known datums available out of the box
+ *
+ * \fn Datum::Datum(const Ellipsoid::Name & model,const util::Vector &t,const util::Vector &r,const double s)
+ * \brief Construct a 7 parameter datum from raw data
+* \param model the tag naming the ellipsoid to use
+* \param t the translation util::Vector  
+* \param r the Euler angles of the rotation matrix
+* \param s the scale factor for the datum
+*
+* \fn Datum::Datum(const Ellipsoid::Name & model,const Helmert &h)
+* \brief Construct a datum from its ellipsoid and 7 parameter Helmert transform
+* \param model the tag naming the ellipsoid to use
+* \param h the Helmert transform
+*
+* \fn Datum::Datum(const Datum &o) 
+* \brief Copy constructor
+* \param o The Datum to copy
+*
+* \fn const Ellipsoid & Datum::ellipsoid() const
+* \brief Get the Datum's ellipsoid
+* \return The ellipsoid used in the Datum specification
+*
+* \fn util::Vector Datum::operator()(const util::Vector &v) const
+* \brief Apply Helmert transform
+* \param v the vector to transform
+* \return transformed vector
+*
+* \fn util::Vector Datum::operator()(util::Vector &&v) const
+* \brief Apply Helmert transform (\e move \e semantics)
+* \param v the rvalue to transform
+* \return transformed vector
+*
+* \fn util::Vector Datum::apply(const util::Vector &v) const
+* \brief Apply Helmert transform
+* \param v the vector to transform
+* \return transformed vector
+*
+* \fn util::Vector Datum::invert(const util::Vector &v) const
+* \brief Apply inverse Helmert transform
+* \param v the vector to transform
+* \return transformed vector
+*
+* \fn Datum Datum::get(const Datum::Name &key) 
+* \brief Get one of the pre-configured named datums
+* \param key tag of the datum to get
+* \returns the desired Datum
+*/
+ 
