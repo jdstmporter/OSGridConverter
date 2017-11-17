@@ -1,0 +1,26 @@
+/**
+ * \class mapping::Helmert Helmert.hpp
+ * \brief Helmert transformation
+ * 
+ * Class representing a 7 parameter Helmert transform between geodetic coordinate systems,
+ * using the standard small angle approximation.  A Helmert tranaformation provides the means
+ * to convert between Cartesian coordinate representations of points on the Earth's geoid in
+ * according to differing datums.
+ *
+ * The class is copy and move assignable and copy and move constructible.
+ *
+ * \fn Helmert::Helmert(const util::Vector & t,const util::Vector & rot, const double s)
+ * \brief Constructs a 7 parameter transform from Datum specification data
+* \param t the datum's translation vector
+* \param rot the datum's vector of (small) Euler angles of the rotation
+* \param s the datum's scale factor
+*
+* \fn Helmert Helmert::inverse() const
+* \brief The inverse Helmert transformation (reverse direction)
+* \return Inverse transformation
+*
+* \fn util::Vector Helmert::operator()(const util::Vector &x) const
+* \brief Apply the transformation to a vector
+* \param x the util::Vector to transform
+* \return the transformed util::Vector
+*/

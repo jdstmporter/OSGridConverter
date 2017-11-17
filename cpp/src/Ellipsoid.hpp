@@ -23,14 +23,7 @@ class Ellipsoid {
 	friend bool operator!=(const Ellipsoid &l,const Ellipsoid &r);
 private:
 
-	struct Axes {
-		double a;
-		double b;
-		double f;
 
-		Axes(const double a_=1.0,const double b_=1.0,double f_=0.0) : a(a_), b(b_), f(f_) {};
-		virtual ~Axes()=default;
-	};
 
 	double A;
 	double B;
@@ -42,19 +35,34 @@ private:
 
 public:
 
+	struct Axes {
+		double a;	 /*!< semi-major axis */
+		double b;	 /*!< semi-minor axis */
+		double f;	 /*!< flattening */
 
+		Axes(const double a_=1.0,const double b_=1.0,double f_=0.0) : a(a_), b(b_), f(f_) {};
+		virtual ~Axes()=default;
+	};
+
+/** \brief Construct an ellipsoid from basic parameters
+\param a major semi-axis
+\param b minor semi-axis
+\param f flattening */
 	Ellipsoid(const double a=1.0,const double b=1.0, double f=0.0) noexcept;
+	/** \brief Construct an ellipsoid from Ellipsoid::Axes object
+\param a axes */
 	Ellipsoid(const Axes &a) noexcept : Ellipsoid(a.a,a.b,a.f) {};
+	/** \brief Copy constructor */
 	Ellipsoid(const Ellipsoid &other) noexcept : Ellipsoid(other.A,other.B,other.f) {};
-	Ellipsoid & operator==(const Ellipsoid &other) noexcept;
+	Ellipsoid & operator=(const Ellipsoid &other) noexcept;
 	virtual ~Ellipsoid() = default;
 	
-	double eccentricity1() const noexcept { return e1; }
-	double eccentricity2() const noexcept { return e2; }
-	double majorAxis() const noexcept { return A; }
-	double minorAxis() const noexcept { return B; }
-	double flattening() const noexcept { return f; }
-	double N() const noexcept { return n; }
+	double eccentricity1() const noexcept { return e1; } /*!< First eccentricity of ellipsoid */
+	double eccentricity2() const noexcept { return e2; } /*!< Second eccentricity of ellipsoid */
+	double majorAxis() const noexcept { return A; } /*!< semi-major axis */
+	double minorAxis() const noexcept { return B; } /*!< semi-minor axis */
+	double flattening() const noexcept { return f; } /*!< flattening */
+	double N() const noexcept { return n; } /*!< nu-parameter */
 	
 	double meridional(const double phi,const double phi0) noexcept;
 

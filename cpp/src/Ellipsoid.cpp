@@ -24,7 +24,7 @@ Ellipsoid::Ellipsoid(double a,double b, double f_) noexcept :
 	M[3]=35.0*nnn/24.0;
 }
 
-Ellipsoid & Ellipsoid::operator==(const Ellipsoid &other) noexcept {
+Ellipsoid & Ellipsoid::operator=(const Ellipsoid &other) noexcept {
 	A=other.A;
 	B=other.B;
 	e1=other.e1;

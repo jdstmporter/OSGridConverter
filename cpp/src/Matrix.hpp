@@ -30,11 +30,29 @@ private:
 
 
 public:
-	Matrix (const int r_,const int c_) : r(r_), c(c_) , rows(r*c,0) {};
+/** \brief Constructs zero matrix of size \p r_ x \p c_
+ 	\param r_ the number of rows
+ 	\param c_ the number of columns */
+	Matrix(const int r_,const int c_) : r(r_), c(c_) , rows(r*c,0) {};
+/** \brief Constructs matrix from values in a std::initializer_list
+ \param r_ the number of rows
+ \param c_ the number of columns
+ \param values the list of values */
 	Matrix(const int r_,const int c_, std::initializer_list<double> values) : r(r_), c(c_) , rows(values) {};
+/** \brief copies values from std::vector into a new Matrix
+ \param r_ the number of rows
+ \param c_ the number of columns
+ \param v values to copy into the new Matrix */
 	Matrix(const int r_,const int c_, const std::vector<double> & v) : r(r_), c(c_), rows(v) {};
+/** \brief moves values from std::vector into a new Matrix
+ \param r_ the number of rows
+ \param c_ the number of columns
+ \param v values to move into the new Matrix */
 	Matrix(const int r_,const int c_, std::vector<double> && v) : r(r_), c(c_), rows(v) {};
-	Matrix (const int r_,const double diag=1.0);
+/** Construct diagonal r_ x r_ matrix 
+\param r_  number of rows / columns
+\param diag diagonal value (defaults to 1.0 */
+	Matrix(const int r_,const double diag=1.0);
 
 	Matrix (const Matrix &o) : r(o.r), c(o.c), rows(o.rows)  {};
 	Matrix (Matrix &&o) : r(o.r), c(o.c), rows(std::move(o.rows))  {};
@@ -51,10 +69,16 @@ public:
 	const_iterator begin()  { return rows.begin(); }
 	const_iterator end()   { return rows.end(); }
 
+	/** Number of rows in matrix */
 	int nRows() const { return r; }
+	/** Number of columns in matrix */
 	int nColumns() const { return c; }
 
-	double &operator()(const int r_,const int j_);
+/** \brief Subscript (\b read-write)
+ * \param r_ index to row of item returned (counting 0 up)
+ * \param c_ index to column of item returned (counting 0 up)
+ * \return reference to value at index \p (r_,c_) */
+	double &operator()(const int r_,const int c_);
 };
 
 bool equalSize(const Matrix &l,const Matrix &r);

@@ -1,0 +1,35 @@
+/**
+
+\class mapping::Ellipsoid Ellipsoid.hpp
+\brief Mapping ellipsoid
+
+Class that represents an ellipsoid used to approximate the earth's local shape 
+as part of a datum.
+
+\fn double Ellipsoid::meridional(const double phi,const double phi0) noexcept
+Calculate the distance along a meridian between two values of latitude
+\param phi end-point latitude
+\param phi0 start-point latitude
+\return distance
+
+\class mapping::Ellipsoid::Axes
+\brief Parameter definition for ellipsoid
+
+
+\fn Axes::Axes(const double a_=1.0,const double b_=1.0,double f_=0.0)
+Constructor
+\param a_ semi-major axis
+\param b_ semi-minor axis
+\param f_ flattening
+
+\enum mapping::Ellipsoid::Name
+\brief Tags for standard ellipsoids
+
+\fn Ellipsoid & Ellipsoid::operator=(const Ellipsoid &other) noexcept
+Assignment operator
+
+\fn Ellipsoid Ellipsoid::get(const Name &key)
+\brief Get standard ellipsoid
+\param key name tag of ellipsoid
+\return the ellipsoid
+*/

@@ -1,0 +1,41 @@
+/**
+\class coordinates::Cartesian Cartesian.hpp
+\brief Cartesian representation of a point
+
+Represents a point on the Earth's surface in Cartesianco-ordinates, so as a point in
+three-dimensional space.  Includes machinery to perform Helmert transforms, corresponding to
+changing from one two-dimensional mapping of the surface to another.
+ 
+
+	
+\fn	Cartesian::Cartesian(const double x,const double y,const double z)
+	\brief Construct instance with specified coordinates
+	\param x the x-coordinate
+	\param y the x-coordinate
+	\param z the x-coordinate
+	
+\fn double Cartesian::P() const
+\brief Norm of projection onto X-Y plane
+\details If the vector is (x,y,z), this is the positive square-root of x*x+y*y
+\return sqrt(x*x+y*y)
+
+\fn double Cartesian::RSquared() const
+\brief norm squared
+\details If the vector is (x,y,z), this is x*x+y*y+z*z
+\return norm squared of underlying vector
+
+\fn double Cartesian::operator[](const Cartesian::Axis &axis) const
+\brief Read-only access to vector component
+\param axis - the axis corresponding to the coordinate to return
+\return the component along that axis
+
+\fn Cartesian Cartesian::transform(const mapping::Helmert &helmert);
+\brief Helmert transform
+\details Apply the provided Helmert transform to give a new set of coordinates
+ \param helmert the Helmert transform to apply
+ \return the transformed coordinates
+ 
+ \fn util::Vector Cartesian::vec() const
+ \brief the underlying vector
+	 
+ */
