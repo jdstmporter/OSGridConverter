@@ -1,5 +1,5 @@
-from .grid import OSGridReference
-from .latlong import LatLong
+from OSGridConverter.grid import OSGridReference
+from OSGridConverter.latlong import LatLong
 from .mapping import Tags
 
 def latlong2grid(latitude,longitude,tag='WGS84'):

@@ -8,6 +8,9 @@
 #include "Helmert.hpp"
 #include <stdexcept>
 #include <algorithm>
+#include <functional>
+#include "ApproximateHelmert.hpp"
+#include "ExactHelmert.hpp"
 
 using namespace boost::numeric::ublas;
 
@@ -27,62 +30,52 @@ bool operator!=(const Matrix &l,const Matrix &r) {
 	return !std::equal(l.begin1(),l.end1(),r.begin1());
 }
 
-
-std::valarray<unsigned> Helmert::indices(const unsigned index) {
-	auto i1=(index+1)%3;
-	auto i2=(index+2)%3;
-	return std::move(std::valarray<unsigned> {i1, i2});
-}
-
-Matrix Helmert::matrix(const Vector & r,const double s) {
-	Matrix m = s*ID(3);
-	for(auto i=0;i<3;i++) {
-		auto jk = Helmert::indices(i);
-		auto v=r(i);
-		m(jk[0],jk[1])= v;
-		m(jk[1],jk[0])=-v;
-	}
-	return std::move(m);
-}
-
-Matrix Helmert::inverseMatrix(const Vector & r,const double s) {
-	auto d=1.0/(s*(inner_prod(r,r)+s*s));
-	return std::move((Helmert::matrix(-r,s)*s + outer_prod(r,r))*d);
-}
-
-
-Helmert::Helmert(const Vector & T,const Vector & R, const double S) : t(T)  {
-	mx=Helmert::matrix(R,S+1.0);
-	inv=Helmert::inverseMatrix(R,S+1.0);
-}
-
-Helmert & Helmert::operator=(const Helmert &o) {
-	t=o.t;
-	mx=o.mx;
-	inv=o.inv;
-	return *this;
-}
-
-
-Helmert Helmert::inverse() const {
-	auto it  = -prod(inv,t);
-	return Helmert(it,inv,mx);
-}
-
-Vector Helmert::operator()(Vector x) const {
-	return prod(mx,x)+t;
-}
-
-
-
-
-
 bool operator==(const Helmert &l,const Helmert &r) {
-	return (l.t==r.t) && (l.mx==r.mx);
+	return l.matrix()==r.matrix() && l.offset()==r.offset();
+};
+bool operator!=(const Helmert &l,const Helmert &r) {
+	return l.matrix()!=r.matrix() || l.offset()!=r.offset();
+};
+
+Vector Helmert::transform(Vector x) const {
+	return prod(matrix(),x)+offset();
 }
-bool operator!=(const Helmert &l,const Helmert &r){
-	return (l.t!=r.t) || (l.mx!=r.mx);
+
+helmert_t Helmert::inverse() const {
+	Vector b=invertedAngles();
+
+	auto t2=-prod(matrix(b,1.0/scale),t);
+	return std::move(std::make_shared<Helmert>(b,t2,1.0/scale));
 }
+
+
+helmert_t getHelmertTransform(const HelmertType &type,const Vector &t,const Vector &angles,const double scale) {
+	helmert_t h;
+	switch(type) {
+	case HelmertType::Approximate: {
+		auto p=std::make_shared<helmert::ApproximateHelmert>(t,angles,scale);
+		h=std::static_pointer_cast<Helmert>(p);
+		break;
+		}
+	case HelmertType::Exact: {
+		auto p=new helmert::ExactHelmert(t,angles,scale);
+		h=std::shared_ptr<Helmert>(static_cast<Helmert *>(p));
+		break;
+		}
+	}
+	return std::move(h);
+}
+
+
+
+
+
+
+
+
+
+
+
 
 } /* namespace mapping */
 

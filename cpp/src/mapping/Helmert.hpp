@@ -10,6 +10,8 @@
 
 
 #include <valarray>
+#include <memory>
+#include <stdexcept>
 #include "algebra.hpp"
 
 
@@ -21,33 +23,52 @@ bool operator!=(const Vector &l,const Vector &r);
 bool operator==(const Matrix &l,const Matrix &r);
 bool operator!=(const Matrix &l,const Matrix &r);
 
+class Helmert;
+using helmert_t = std::shared_ptr<Helmert>;
+enum class HelmertType {
+	Exact,
+	Approximate
+};
+
+helmert_t getHelmertTransform(const HelmertType &type,const Vector &t,const Vector &angles,const double scale);
+
+
 class Helmert {
 	friend bool operator==(const Helmert &l,const Helmert &r);
 	friend bool operator!=(const Helmert &l,const Helmert &r);
-private:
-	Vector t;
-	Matrix mx;
-	Matrix inv;
 
-	double determinant();
-	static Matrix matrix(const Vector &r, const double s);
-	static Matrix inverseMatrix(const Vector &r, const double s);
-	static std::valarray<unsigned> indices(const unsigned index);
+protected:
+	Vector angles;
+	Vector t;
+	double scale;
+
+	virtual Matrix matrix(const Vector &a,const double sc) const { throw std::runtime_error("Not implemented"); };
+	virtual Matrix matrix() const { return matrix(angles,scale); };
+
+	virtual Vector offset() const { return t; };
+
+	virtual Vector invertedAngles() const { throw std::runtime_error("Not implemented"); };
 
 public:
-	Helmert() : t(Zero(3)), mx(ID(3)), inv(ID(3)) {};
-	Helmert(const Vector & T, const Matrix & MX, const Matrix &INV) : t(T),  mx(MX), inv(INV) {};
-	Helmert(const Vector & T,const Vector & R, const double S);
-	Helmert(const Helmert &o) : t(o.t), mx(o.mx), inv(o.inv) {};
+
+
+	Helmert() : angles(Zero(3)), t(Zero(3)), scale(1.0) {};
+	Helmert(const Vector &t_,const Vector &angles_,const double scale_) : angles(angles_), t(t_), scale(scale_) {};
+	Helmert(const Helmert &o) = default;
 	virtual ~Helmert() = default;
 
-	Helmert & operator=(const Helmert &o);
-	Helmert inverse() const;
-	Vector operator()(Vector x) const;
+	Helmert & operator=(const Helmert &o) = default;
+
+	virtual helmert_t inverse() const;
+	Vector transform(Vector x) const;
+
 };
+
 
 bool operator==(const Helmert &l,const Helmert &r);
 bool operator!=(const Helmert &l,const Helmert &r);
+
+
 
 } /* namespace mapping */
 

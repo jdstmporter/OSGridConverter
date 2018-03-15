@@ -44,8 +44,8 @@ double Cartesian::operator[](const Cartesian::Axis &axis) const {
 	return vector(static_cast<unsigned>(axis));
 }
 
-Cartesian Cartesian::transform(const mapping::Helmert &helmert) {
-	auto out=helmert(vector);
+Cartesian Cartesian::transform(const mapping::helmert_t &helmert) {
+	auto out=helmert->transform(vector);
 	return std::move(Cartesian(out));
 }
 

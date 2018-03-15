@@ -4,7 +4,7 @@ Created on 19 Jul 2017
 @author: julianporter
 '''
 
-from .base import OSGridError, areNumbers
+from OSGridConverter.base import OSGridError, areNumbers
 from .mapping import Data, transformation
 from .cartesian import Cartesian
 import re

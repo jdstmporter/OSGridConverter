@@ -4,8 +4,9 @@ Created on 27 Jul 2017
 @author: julianporter
 '''
 
-from math import sqrt
+from math import sqrt,cos,sin
 from ..base import OSGridError, areNumbers
+
 
 def dot(a1,a2):
     zipped=zip(a1,a2)
@@ -80,6 +81,19 @@ class Vector3(Vector):
     @property
     def R(self):
         return self.p*self.p+self.z*self.z
+    
+    @classmethod
+    def axis(cls,axis):
+        try:
+            axis=axis.upper()
+            pos = ['X','Y','Z'].index(axis)
+            args=[0,0,0]
+            args[pos]=1
+            return Vector3(args)
+        except ValueError:
+            raise OSGridError('Axis must be X, Y or Z')                  
+                
+        
             
 class Matrix(object):
     
@@ -99,6 +113,26 @@ class Matrix(object):
             r[i]=1
             rows.append(r)
         return Matrix(rows,n=n)
+    
+    @classmethod
+    def rotation(cls,axis,angle):
+        try:
+            axis=axis.upper()
+            pos = ['X','Y','Z'].index(axis)
+            i1=(pos+1)%3
+            i2=(pos+2)%3
+            sgn=2*(pos%2)-1
+            c=cos(angle)
+            s=sin(angle)*sgn
+            rows=[Vector3.axis('X'),Vector3.axis('Y'),Vector3.axis('Z')]
+            rows[i1].array[i1]=c
+            rows[i1].array[i2]=s
+            rows[i2].array[i2]=c
+            rows[i2].array[i1]=-s
+            return Matrix(rows)
+        except ValueError:
+            raise OSGridError('Axis must be X, Y or Z')
+
         
     
     def __init__(self,rows,n=3):

@@ -36,11 +36,10 @@ class HelmertMatrix(Matrix):
     def inverse(self):
         m=(self.s*Matrix(self.rowsFor(-self.r,self.s),n=3))+Matrix.outerProduct(self.r, n=3)
         return m*(1.0/self.determinant())      
-         
+
+
 
 class Transform (object) :
-    
-
 
     @classmethod
     def _normalise(cls,seconds):
@@ -71,6 +70,39 @@ class Transform (object) :
     def __str__(self):
         return 'mx = {}, t = {}'.format(self.mx,self.vecT)
 
+class ExactTransform (object) :
+
+    @classmethod
+    def _normalise(cls,seconds):
+        return radians(seconds/3600.0)
     
+    def __init__(self,*args):
+        if len(args)>=3:
+            t, r, s = args
+            self.t=Vector(t)
+            
+            self.r=Vector([radians(x/3600.0) for x in r])
+            s=s/1.0e6
+            self.s=1.0+s
+            rotation=Matrix.rotation('Z',self.r[0]) @ Matrix.rotation('Y',self.r[1]) @ Matrix.rotation('X',self.r[2])
+            self.mx=self.s*rotation
+        elif len(args)==0:
+            self.mx=Matrix.identity(3)
+            self.t=Vector.zero(3)
+        
+    def __call__(self,vector):
+        return self.t + (self.mx @ vector)
+        
+    @property
+    def inverse(self):
+        inv=ExactTransform()
+        rotation=Matrix.rotation('X',-self.r[2]) @ Matrix.rotation('Y',-self.r[1]) @ Matrix.rotation('Z',-self.r[0])
+        inv.s=1.0/self.s
+        inv.mx=rotation*inv.s
+        inv.t =-(inv.mx@self.t)
+        return inv
+    
+    def __str__(self):
+        return 'mx = {}, t = {}'.format(self.mx,self.vecT)
     
         

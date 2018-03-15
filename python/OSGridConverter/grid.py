@@ -9,8 +9,8 @@ import re
 from math import radians, degrees , pow, floor
 from numbers import Number
 from .mapping import OSDefaultGrid
-from .latlong import LatLong
-from .base import OSGridError, areNumbers, log
+from OSGridConverter.latlong import LatLong
+from OSGridConverter.base import OSGridError, areNumbers, log
 import traceback
 
         

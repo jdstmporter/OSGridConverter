@@ -36,7 +36,7 @@ public:
 	double P() const;
 	double RSquared() const;
 	double operator[](const Axis &axis) const;
-	Cartesian transform(const mapping::Helmert &helmert);
+	Cartesian transform(const mapping::helmert_t &helmert);
 
 	mapping::Vector vec() const { return vector; }
 };

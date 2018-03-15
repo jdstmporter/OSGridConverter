@@ -23,6 +23,7 @@ using Vector = boost::numeric::ublas::vector<double>;
 using Zero   = boost::numeric::ublas::zero_vector<double>;
 using Matrix = boost::numeric::ublas::matrix<double>;
 using ID     = boost::numeric::ublas::identity_matrix<double>;
+using ZMatrix= boost::numeric::ublas::zero_matrix<double>;
 
 
 
