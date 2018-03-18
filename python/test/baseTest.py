@@ -4,7 +4,6 @@ Created on 28 Jul 2017
 @author: julianporter
 '''
 import unittest
-from .types import Generator
 import traceback
 VERBOSE=False
 
@@ -14,14 +13,13 @@ class TestFramework(unittest.TestCase):
     testName='test'
     
     def setUp(self):
-        self.generator=Generator()
         self.nTests=1000
         self.errors=[]
         self.good=0
         self.count=0
         self.crashes=0
         
-    def testAction(self):
+    def test_action(self):
         for _ in range(self.nTests): 
             try:
                 self.good+=self.action()

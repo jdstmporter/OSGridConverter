@@ -7,7 +7,7 @@ import unittest
 from .baseTest import TestFramework
 from .types import equalMatrices, equalVectors, vectorDiff, matrixDiff
 import numpy as np
-from OSGridConverter.cartesian import Transform, Matrix
+from OSGridConverter.cartesian import ExactTransform, Matrix
 
 
 
@@ -97,7 +97,7 @@ class TestHelmertInversion(unittest.TestCase):
         t=self.generator.randomList()
         r=self.generator.randomList()
         s=self.generator.randomScalar()
-        h=Transform(t,r,s).mx
+        h=ExactTransform(t,r,s).mx
         i=h.inverse()
         pr1 = h@i
         e= matrixDiff(pr1, self.i3)

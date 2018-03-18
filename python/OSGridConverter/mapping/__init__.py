@@ -1,2 +1,3 @@
-from .ellipsoids import Data, Tags, transformation
+from .datum import Datum
 from .defaultGrid import OSDefaultGrid
+from .reference import GridReference

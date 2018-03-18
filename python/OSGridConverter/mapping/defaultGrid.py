@@ -6,7 +6,25 @@ Created on 26 Jul 2017
 from math import sin,cos,tan, pow, sqrt, radians
 from .ellipsoids import Airy1830
 
+class Parts(object):
+    def __init__(self,v=0):
+        self._v=v
+ 
+        self._powers=[1,self._v]
+        
+    def __call__(self,n):
+        while len(self._powers)<=n:
+            self._powers.append(self._v*self._powers[-1])
+        return self._powers[n]
+    
+ 
+
+             
+   
+    
+
 class OSDefaultGrid (object):
+    
     F0   = 0.9996012717
     phi0 = radians(49)
     l0   = radians(-2)
@@ -14,95 +32,91 @@ class OSDefaultGrid (object):
     E0   =  400000
     ellipsoid = Airy1830
     
+    signs=[1,-1,1,-1]
+
+    @classmethod
+    def AF0(cls):
+        return cls.ellipsoid.a*cls.F0
+    
     def __init__(self,phi,E):
         self.phi=phi
-        self.E=E
+        self.l=E
         
-        _c=cos(phi)
-        _s=sin(phi)
-        _t=tan(phi)
-        e2=self.ellipsoid.e1
-        v   = 1.0-e2*pow(_s,2)
-        _nu = self.aF0()/sqrt(v)
-        rho = self.aF0()*(1-e2)*pow(v,-1.5)
-        eta1= _nu/rho
+        c=Parts(cos(phi))
+        s=Parts(sin(phi))
+        t=Parts(tan(phi))
+        sc=1.0/self.parts.c(1)
+        
+        def cs(m,n): return c(m)*s(n)
+        
+        aF0=self.ellipsoid.a*self.F0
+        e1=self.ellipsoid.eccentricity(1)
+        nn  = self.ellipsoid.nu*self.ellipsoid.nu
+        v   = 1.0-e1*s(2)
+        nu = Parts(aF0/sqrt(v))
+        
+        def ncs(c=1,s=0): return nu(1)*cs(c,s)
+        
+        rho = aF0*(1-e1)*pow(v,-1.5)
+        eta1= nu(1)/rho
         eta2= eta1 - 1.0
         
-        def ncs(cpower=1,spower=0):
-            if spower==0:
-                return _nu*pow(_c,cpower)
-            else: 
-                return _nu*pow(_c,cpower)*pow(_s,spower)
-            
-        def t(power):
-            return pow(_t,power)
-        
-        def nu(power):
-            return pow(_nu,power)
-    
-        def rhoNu(power):
-            return rho*pow(_nu,power)
 
-        self.transforms=dict()
-        M=self.meridional(self.phi)
-        sc=1.0/_c
-        self.transforms['I']     = M + self.N0
-        self.transforms['II']    = ncs(1,1)/2.0
-        self.transforms['III']   = ncs(3,1)*(5-t(2)+9*self.n(2))/24.0
-        self.transforms['IIIA']  = ncs(5,1)*(61-58*t(2)+t(4))/720.0
-        self.transforms['IV']    = ncs(1,0)
-        self.transforms['V']     = ncs(3,0)*(eta1-t(2))/6.0
-        self.transforms['VI']    = ncs(5,0)*(5 - 18*t(2) + t(4) + 14*eta2 - 58*t(2)*eta2)/120.0
-        self.transforms['VII']   = t(1)/(2*rhoNu(1))
-        self.transforms['VIII']  = t(1)/(24*rhoNu(3))*(5+3*t(2)+eta2-9*t(2)*eta2)
-        self.transforms['IX']    = t(1)/(720*rhoNu(5))*(61+90*t(2)+45*t(4))
-        self.transforms['X']     = sc/_nu
-        self.transforms['XI']    = sc/(6*nu(3)*(eta1+2*t(2)))
-        self.transforms['XII']   = sc/(120*nu(5)*(5+28*t(2)+24*t(4)))
-        self.transforms['XIIA']  = sc/(5040*nu(7)*(61+662*t(2)+1320*t(4)+720*t(6)))
+        self.latlong2gridN=[
+            self.meridian(self.phi) + self.N0,
+            ncs(1,1)/2.0,
+            ncs(3,1)*(5-t(2)+9*nn)/24.0,
+            ncs(5,1)*(61-58*t(2)+t(4))/720.0,
+        ]
+        self.latlong2gridE=[
+            ncs(1,0),
+            ncs(3,0)*(eta1-t(2))/6.0,
+            ncs(5,0)*(5 - 18*t(2) + t(4) + 14*eta2 - 58*t(2)*eta2)/120.0,
+            0
+        ]
+        
+        self.grid2latlongP=[
+            self.phi,
+            t(1)/(2*rho*nu(1)),
+            t(1)/(24*rho*nu(3))*(5+3*t(2)+eta2-9*t(2)*eta2),
+            t(1)/(720*rho*nu(5))*(61+90*t(2)+45*t(4))
+        ]
+        
+        self.grid2latlongL=[
+            sc/nu(1),
+            sc/(6*nu(3)*(eta1+2*t(2))),
+            sc/(120*nu(5)*(5+28*t(2)+24*t(4))),
+            sc/(5040*nu(7)*(61+662*t(2)+1320*t(4)+720*t(6)))
+        ]
+        
+  
+    '''
+    +0 VIB        +1 X
+    -2 VII        -3 XI
+    +4 VIII       +5 XII
+    -6 IX         -7 XIIA
+                  
+    +0 I          +1 IV
+    +2 II         +3 V
+    +4 III        +5 VI
+    +6 IIIA       +7 VIA
     
-    def __getitem__(self,key):
-        return self.transforms[key]
-       
-    def rhoNu(self,power):
-        return self.rho*pow(self.nu,power)
-    
-    def Nu(self,power):
-        return pow(self.nu,power)
-    
-    def s(self,power):
-        return pow(self._s,power)
-    
-    def c(self,power):
-        return pow(self._c,power)
-    
-    def t(self,power):
-        return pow(self._t,power)
-    
-    @classmethod
-    def n(cls,power=1):
-        return pow(OSDefaultGrid.ellipsoid.n,power)
-    
+    '''
+  
     def gridToLatLong(self):
         dE = self.E-OSDefaultGrid.E0
-        phi = self.phi - self['VII']*pow(dE,2) + self['VIII']*pow(dE,4) - self['IX']*pow(dE,6)
-        l = OSDefaultGrid.l0 + self['X']*dE - self['XI']*pow(dE,3) + self['XII']*pow(dE,5) - self['XIIA']*pow(dE,7)
+        phi=sum([self.grid2latlongP[i]*pow(dE,2*i)*self.signs[i] for i in range(0,4)])
+        l=sum([self.grid2latlongL[i]*pow(dE,2*i+1)*self.signs[i] for i in range(0,4)])+OSDefaultGrid.l0
         return (phi,l)
+        
     
     def latLongToGrid(self):
         dl = self.E-OSDefaultGrid.l0
-        N = self['I'] + self['II']*pow(dl,2) + self['III']*pow(dl,4) + self['IIIA']*pow(dl,6)
-        E = OSDefaultGrid.E0 + self['IV']*dl + self['V']*pow(dl,3) + self['VI']*pow(dl,5)
+        N=sum([self.latlong2gridN[i]*pow(dl,2*i) for i in range(0,4)])
+        E=sum([self.latlong2gridE[i]*pow(dl,2*i+1) for i in range(0,4)])+OSDefaultGrid.E0
         return (E,N)
     
     @classmethod
-    def meridional(cls,phi):
-        return cls.ellipsoid.meridional(phi,cls.phi0)*cls.bF0()
+    def meridian(cls,phi):
+        return cls.ellipsoid(phi,cls.phi0)*cls.ellipsoid.b*cls.F0
     
-    @classmethod
-    def aF0(cls):
-        return cls.ellipsoid.a*cls.F0
-    
-    @classmethod
-    def bF0(cls):
-        return cls.ellipsoid.b*cls.F0

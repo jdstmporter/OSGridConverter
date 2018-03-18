@@ -1,3 +1,3 @@
 from .vector import Cartesian
-from .transform import Transform
+from .transform import ExactTransform
 from .algebra import Matrix, Vector, dot

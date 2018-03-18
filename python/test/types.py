@@ -31,16 +31,7 @@ def matrixDiff(np,v):
     if e==0 : return 1000.0
     return -log10(e)
 
-def gridDiff(g1,g2):
-    e=max([abs(x-y) for (x,y) in zip(g1.eastNorth(),g2.eastNorth())])
-    if e==0 : return 1000.0
-    return 6-log10(e)
 
-def latlongDiff(l1,l2):
-    e=(l1.latitude-l2.latitude,l1.longitude-l2.longitude)
-    e=max([abs(x) for x in e])
-    if e==0 : return 1000.0
-    return 3-log10(e)
 
 class Generator(object):
     
@@ -78,13 +69,5 @@ class Generator(object):
         a=self.randomListOfLists()
         return (np.array(a), Matrix(a,n=self.n))
     
-    def randomLatLong(self,tag='WGS84'):
-        latitude  = random.uniform(50.0,59.0)
-        longitude = random.uniform(-5.0,2.0)
-        return LatLong(latitude,longitude,tag=tag)
-    
-    def randomGrid(self,tag='WGS84'):
-        ll=self.randomLatLong(tag=tag)
-        return OSGridReference(ll)
-    
+
 
