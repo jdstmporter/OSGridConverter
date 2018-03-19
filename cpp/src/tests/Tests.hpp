@@ -8,7 +8,7 @@
 #ifndef SRC_TESTS_TESTS_HPP_
 #define SRC_TESTS_TESTS_HPP_
 
-#include <tests/TestBase.hpp>
+#include "TestBase.hpp"
 #include <string>
 
 namespace test {

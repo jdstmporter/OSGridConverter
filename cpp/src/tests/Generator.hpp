@@ -10,7 +10,7 @@
 
 #include <random>
 #include <string>
-#include <coordinates.hpp>
+#include "../coordinates.hpp"
 #include <chrono>
 
 namespace test {

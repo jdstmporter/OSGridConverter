@@ -5,8 +5,8 @@
  *      Author: julianporter
  */
 
-#include <tests/Suite.hpp>
-#include<tests/Tests.hpp>
+#include "Suite.hpp"
+#include "Tests.hpp"
 #include <cppunit/Test.h>
 #include <cppunit/TestCaller.h>
 #include <cppunit/ui/text/TestRunner.h>

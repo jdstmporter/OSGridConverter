@@ -7,12 +7,18 @@
 //============================================================================
 
 
-#include <tests/Suite.hpp>
+#include "tests/Suite.hpp"
 
 
 
 int main() {
-	test::ConverterTestSuite suite;
-	suite.run();
+
+	try {
+		test::ConverterTestSuite suite;
+		suite.run();
+	}
+	catch(std::exception &e) {
+		std::cout << "ERROR: " << e.what() << std::endl;
+	}
 	return 0;
 }

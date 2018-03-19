@@ -1,77 +1,46 @@
 /*
- * Helmert.cpp
+ * ExactHelmert.cpp
  *
- *  Created on: 30 Jul 2017
+ *  Created on: 1 Mar 2018
  *      Author: julianporter
  */
 
 #include "Helmert.hpp"
-#include <stdexcept>
-#include <algorithm>
-#include <functional>
-#include "ApproximateHelmert.hpp"
-#include "ExactHelmert.hpp"
-
-using namespace boost::numeric::ublas;
 
 namespace mapping {
 
-bool operator==(const Vector &l,const Vector &r) {
-	return std::equal(l.begin(),l.end(),r.begin());
-}
-bool operator!=(const Vector &l,const Vector &r) {
-	return !std::equal(l.begin(),l.end(),r.begin());
-}
 
-bool operator==(const Matrix &l,const Matrix &r) {
-	return std::equal(l.begin1(),l.end1(),r.begin1());
-}
-bool operator!=(const Matrix &l,const Matrix &r) {
-	return !std::equal(l.begin1(),l.end1(),r.begin1());
-}
 
-bool operator==(const Helmert &l,const Helmert &r) {
-	return l.matrix()==r.matrix() && l.offset()==r.offset();
-};
-bool operator!=(const Helmert &l,const Helmert &r) {
-	return l.matrix()!=r.matrix() || l.offset()!=r.offset();
-};
+
+
+Helmert::Helmert(const Vector & o,const Vector & a, const double s_) : offset(o), angles(a), scale(s_) {
+
+	Matrix matrix=ZMatrix(3);
+	matrix(0,0)= c(0)*c(1);
+	matrix(0,1)=-s(0)*c(2)-c(0)*s(1)*s(2);
+	matrix(0,2)= s(0)*s(2)-c(0)*s(1)*c(2);
+	matrix(1,0)= s(0)*c(1);
+	matrix(1,1)= c(0)*c(2)-s(0)*s(1)*s(2);
+	matrix(1,2)=-c(0)*s(2)-s(0)*s(1)*c(2);
+	matrix(2,0)= s(1);
+	matrix(2,1)= c(1)*s(2);
+	matrix(2,2)= c(1)*c(2);
+
+	mx=matrix * scale;
+	invMx=transpose(matrix) * (1.0/scale);
+}
 
 Vector Helmert::transform(Vector x) const {
-	return prod(matrix(),x)+offset();
+	return prod(mx,x)+offset;
 }
 
-helmert_t Helmert::inverse() const {
-	Vector b=invertedAngles();
-
-	auto t2=-prod(matrix(b,1.0/scale),t);
-	return std::move(std::make_shared<Helmert>(b,t2,1.0/scale));
+Vector Helmert::inverseTransform(Vector x) const {
+	return prod(invMx,x-offset);
 }
 
-
-helmert_t getHelmertTransform(const HelmertType &type,const Vector &t,const Vector &angles,const double scale) {
-	helmert_t h;
-	switch(type) {
-	case HelmertType::Approximate: {
-		auto p=std::make_shared<helmert::ApproximateHelmert>(t,angles,scale);
-		h=std::static_pointer_cast<Helmert>(p);
-		break;
-		}
-	case HelmertType::Exact: {
-		auto p=new helmert::ExactHelmert(t,angles,scale);
-		h=std::shared_ptr<Helmert>(static_cast<Helmert *>(p));
-		break;
-		}
-	}
-	return std::move(h);
+bool Helmert::eq(const Helmert &o) const {
+	return scale==o.scale && offset==o.offset && angles==o.angles;
 }
-
-
-
-
-
-
-
 
 
 
@@ -79,5 +48,3 @@ helmert_t getHelmertTransform(const HelmertType &type,const Vector &t,const Vect
 
 } /* namespace mapping */
 
-
-  

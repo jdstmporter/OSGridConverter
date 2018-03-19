@@ -8,7 +8,7 @@
 #ifndef SRC_TESTS_SUITE_HPP_
 #define SRC_TESTS_SUITE_HPP_
 
-
+#include <iostream>
 #include <cppunit/TestSuite.h>
 
 namespace test {

@@ -39,10 +39,10 @@ Datum Datum::get(const Name &key) {
 
 
 bool operator==(const Datum &l,const Datum &r) {
-	return (l.e==r.e) && (l.helmert==r.helmert);
+	return (l.e==r.e) && (l.helmert.eq(r.helmert));
 }
 bool operator!=(const Datum &l,const Datum &r){
-	return (l.e!=r.e) || (l.helmert!=r.helmert);
+	return (l.e!=r.e) || (!l.helmert.eq(r.helmert));
 }
 
 

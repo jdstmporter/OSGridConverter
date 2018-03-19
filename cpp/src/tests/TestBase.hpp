@@ -14,7 +14,7 @@
 #include <list>
 #include <string>
 #include <type_traits>
-#include <mapping.hpp>
+#include "../mapping.hpp"
 #include "Generator.hpp"
 
 namespace test {

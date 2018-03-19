@@ -5,7 +5,7 @@
  *      Author: julianporter
  */
 
-#include <tests/TestBase.hpp>
+#include "TestBase.hpp"
 #include <iostream>
 
 namespace test {

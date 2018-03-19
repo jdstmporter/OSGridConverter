@@ -25,7 +25,13 @@ using Matrix = boost::numeric::ublas::matrix<double>;
 using ID     = boost::numeric::ublas::identity_matrix<double>;
 using ZMatrix= boost::numeric::ublas::zero_matrix<double>;
 
+bool operator==(const Vector &l,const Vector &r);
+bool operator!=(const Vector &l,const Vector &r);
 
+bool operator==(const Matrix &l,const Matrix &r);
+bool operator!=(const Matrix &l,const Matrix &r);
+
+Matrix transpose(const Matrix &m);
 
 }
 

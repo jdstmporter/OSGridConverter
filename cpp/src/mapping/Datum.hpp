@@ -47,19 +47,19 @@ public:
 		};
 private:
 	Ellipsoid e;
-	helmert_t helmert;
+	Helmert helmert;
 
 public:
-	Datum(const Ellipsoid::Name & model,const Vector &t,const Vector &r,const double s) :  e(Ellipsoid::get(model)), helmert(getHelmertTransform(HelmertType::Exact,t,r,s)) {};
-	Datum(const Ellipsoid::Name & model,const helmert_t &h) : e(Ellipsoid::get(model)), helmert(h) {};
+	Datum(const Ellipsoid::Name & model,const Vector &t,const Vector &r,const double s) :  e(Ellipsoid::get(model)), helmert(t,r,s) {};
+	Datum(const Ellipsoid::Name & model,const Helmert &h) : e(Ellipsoid::get(model)), helmert(h) {};
 	Datum(const Specification & spec) : Datum(spec.name,spec.t,spec.r,spec.e) {};
 	Datum(const Datum &o) : e(o.e), helmert(o.helmert) {};
 	virtual ~Datum() = default;
 	
 	const Ellipsoid & ellipsoid() const { return e; }
-	Vector operator()(const Vector &v) const { return helmert->transform(v); }
-	Vector apply(const Vector &v) const { return helmert->transform(v); }
-	Vector invert(const Vector &v) const { return helmert->inverse()->transform(v); }
+	Vector operator()(const Vector &v) const { return helmert.transform(v); }
+	Vector apply(const Vector &v) const { return helmert.transform(v); }
+	Vector invert(const Vector &v) const { return helmert.inverseTransform(v); }
 
 
 	static Datum get(const Name &key);
