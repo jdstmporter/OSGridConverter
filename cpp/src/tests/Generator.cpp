@@ -8,6 +8,7 @@
 #include <tests/Generator.hpp>
 #include <sstream>
 #include <iostream>
+#include <cmath>
 
 namespace test {
 
@@ -34,14 +35,24 @@ void Generator::reset() {
 	//uniform.reset();
 }
 
-double gridDiff(const coordinates::OSGrid &g1,const coordinates::OSGrid &g2) {
-	double e=std::max(abs(g1.E()-g2.E()),abs(g1.N()-g2.N()));
-	return (e==0) ? 1000.0 : 6.0-log10(e);
+inline double safeLog10(long x) {
+	return (x==0) ? -10.0 : log10((double)x);
 }
 
+double gridDiff(const coordinates::OSGrid &g1,const coordinates::OSGrid &g2) {
+	auto dE=abs(g1.E()-g2.E());
+	auto dN=abs(g1.N()-g2.N());
+	auto d=hypot((double)dE,(double)dN);
+	return (d==0) ? 1000.0 : 6-log10(d);
+}
+
+static const double EarthRadius = 6.371e6;
+
 double latLongDiff(const coordinates::LatitudeLongitude &l1,const coordinates::LatitudeLongitude &l2) {
-	double e=std::max(abs(l1.Longitude()-l2.Longitude()),abs(l1.Latitude()-l2.Latitude()));
-	return (e==0) ? 1000.0 : 3.0-log10(e);
+	auto dE=fabs(l1.phi()-l2.phi());
+	auto dN=fabs(l1.lambda()-l2.lambda());
+	auto d=hypot(dE,dN)*EarthRadius;
+	return (d==0) ? 1000.0 : 6-log10(d);
 }
 
 std::string gridString(const coordinates::OSGrid &g) {

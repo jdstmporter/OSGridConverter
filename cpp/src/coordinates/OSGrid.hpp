@@ -14,6 +14,7 @@
 
 namespace coordinates {
 
+
 class LatitudeLongitude;
 
 class OSGrid {

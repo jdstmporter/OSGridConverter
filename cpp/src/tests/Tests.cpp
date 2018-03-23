@@ -20,7 +20,7 @@ int GridToLatLong::action() {
 		auto error=gridDiff(g,gg);
 		push(error,3);
 		auto value =  (s==gridString(gg));
-		if(!value) {
+		if(verbose && !value) {
 			std::cout << s << " " << g << " -> " << ll << " -> " << gg << std::endl;
 		}
 		return (s==gridString(gg)) || (error>3.0) ? 1 : 0;
@@ -38,7 +38,7 @@ int GridToLatLongViaText::action() {
 		auto error=gridDiff(g,gg);
 		push(error,3);
 		auto value =  (s==gridString(gg));
-		if(!value) {
+		if(verbose && !value) {
 			std::cout << s << " " << g << " -> " << ll << " -> " << gg << std::endl;
 		}
 		return (s==gridString(gg)) || (error>3.0) ? 1 : 0;
@@ -51,6 +51,7 @@ int LatLongToGrid::action() {
 	coordinates::OSGrid g(l);
 	coordinates::LatitudeLongitude ll(g,tag);
 	auto error=latLongDiff(l, ll);
+	if(verbose) { std::cout << l << " -> " << g << " -> " << ll << " -> " << error << std::endl; }
 	return push(error,3);
 }
 

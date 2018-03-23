@@ -27,7 +27,10 @@ private:
 	int count;
 	int crashes;
 	
+
+
 protected:
+	bool verbose;
 	Generator generator;
 	mapping::Datum::Name tag;
 	int push(double error,double threshold=10.0);
@@ -35,7 +38,7 @@ protected:
 	
 	
 public:
-	ConversionTestBase(std::string name) : CppUnit::TestCase(name),  nTests(1000),errors(), good(0), count(0),crashes(0), generator(), tag(mapping::Datum::Name::OSGB36) {};
+	ConversionTestBase(std::string name,bool verbose_ = false) : CppUnit::TestCase(name),  nTests(1000),errors(), good(0), count(0),crashes(0), verbose(verbose_), generator(), tag(mapping::Datum::Name::OSGB36) {};
 	virtual ~ConversionTestBase() = default;
 	
 	virtual void setUp() {};
