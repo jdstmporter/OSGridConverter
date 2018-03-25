@@ -46,7 +46,7 @@ std::pair<double,double> gridToLatLong(const OSGrid &grid,Tag tag) {
 	}
 }
 
-LatitudeLongitude::LatitudeLongitude(const Cartesian &cartesian,Tag tag) : LatitudeLongitude(cartesian.vec(),tag) {};
+
 
 LatitudeLongitude::LatitudeLongitude(const std::string &str,Tag tag) : datum(mapping::Datum::get(tag)), dTag(tag) {
 	Parser p(str);
@@ -92,6 +92,8 @@ LatitudeLongitude::LatitudeLongitude(const OSGrid &grid,Tag tag) : datum(mapping
 	longitude=pair.second;
 }
 
+LatitudeLongitude::LatitudeLongitude(const Cartesian &cartesian,Tag tag) : LatitudeLongitude(cartesian.vec(),tag) {};
+
 LatitudeLongitude  LatitudeLongitude::transform( Tag newTag) const {
 	auto newDatum=mapping::Datum::get(newTag);
 	if(datum==newDatum) return *this;
@@ -101,6 +103,8 @@ LatitudeLongitude  LatitudeLongitude::transform( Tag newTag) const {
 		return LatitudeLongitude(c2,newTag);
 	}
 }
+
+std::tuple<double,double> LatitudeLongitude::coordinates() const { return std::make_tuple(longitude,latitude); }
 
 } /* namespace coordinates */
 

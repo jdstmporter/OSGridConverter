@@ -5,7 +5,7 @@
  *      Author: julianporter
  */
 
-#include <tests/Generator.hpp>
+#include "Generator.hpp"
 #include <sstream>
 #include <iostream>
 #include <cmath>
@@ -20,13 +20,13 @@ double Generator::random(const double lo,const double hi) {
 		return uniform(source)*(hi-lo)+lo;
 	}
 
-coordinates::LatitudeLongitude Generator::latLong(const mapping::Datum::Name & tag) {
+coordinates::LatitudeLongitude Generator::latLong(const mapping::DatumName & tag) {
 	auto lat=random(50.0,59.0);
 	auto lon=random(-5.0,2.0);
 	return coordinates::LatitudeLongitude(lat,lon,tag);
 }
 
-coordinates::OSGrid Generator::grid(const mapping::Datum::Name & tag) {
+coordinates::OSGrid Generator::grid(const mapping::DatumName & tag) {
 	auto ll=latLong(tag);
 	return coordinates::OSGrid(ll);
 }

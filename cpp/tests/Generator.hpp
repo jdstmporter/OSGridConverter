@@ -10,7 +10,7 @@
 
 #include <random>
 #include <string>
-#include "../coordinates.hpp"
+#include <coordinates.hpp>
 #include <chrono>
 
 namespace test {
@@ -30,8 +30,8 @@ public:
 
 	};
 
-	coordinates::LatitudeLongitude latLong(const mapping::Datum::Name & tag = mapping::Datum::Name::WGS84);
-	coordinates::OSGrid grid(const mapping::Datum::Name & tag = mapping::Datum::Name::WGS84);
+	coordinates::LatitudeLongitude latLong(const mapping::DatumName & tag = mapping::DatumName::WGS84);
+	coordinates::OSGrid grid(const mapping::DatumName & tag = mapping::DatumName::WGS84);
 
 	void reset();
 		

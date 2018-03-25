@@ -14,7 +14,7 @@
 #include <list>
 #include <string>
 #include <type_traits>
-#include "../mapping.hpp"
+#include <mapping.hpp>
 #include "Generator.hpp"
 
 namespace test {
@@ -32,13 +32,13 @@ private:
 protected:
 	bool verbose;
 	Generator generator;
-	mapping::Datum::Name tag;
+	mapping::DatumName tag;
 	int push(double error,double threshold=10.0);
 	virtual int action() { return 1; };
 	
 	
 public:
-	ConversionTestBase(std::string name,bool verbose_ = false) : CppUnit::TestCase(name),  nTests(1000),errors(), good(0), count(0),crashes(0), verbose(verbose_), generator(), tag(mapping::Datum::Name::OSGB36) {};
+	ConversionTestBase(std::string name,bool verbose_ = false) : CppUnit::TestCase(name),  nTests(1000),errors(), good(0), count(0),crashes(0), verbose(verbose_), generator(), tag(mapping::DatumName::OSGB36) {};
 	virtual ~ConversionTestBase() = default;
 	
 	virtual void setUp() {};

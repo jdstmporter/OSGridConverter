@@ -1,0 +1,4 @@
+include *.rst
+recursive-include utils *.py
+recursive-include cpp *.hpp *.cpp
+

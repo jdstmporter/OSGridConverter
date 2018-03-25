@@ -1,0 +1,58 @@
+Metadata-Version: 1.1
+Name: geoconv
+Version: 0.5
+Summary: Utility to convert between Cartesian coordinates on the ground, longitude / latitude coordinates, and OS Grid reference strings
+Home-page: https://github.com/jdstmporter/OSGridConverter.git
+Author: Julian Porter
+Author-email: julian@jpembedded.solution
+License: BSD 3-Clause License
+====================
+
+**Copyright (c) 2017, Julian Porter. All rights reserved.**
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the copyright holder nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Description-Content-Type: UNKNOWN
+Description: ## OSGridConverter
+        
+        Libraries to convert between GIS co-ordinate systems, specifically *latitude / longitude* co-ordinates 
+        and *easting / northing* co-ordinates based on projection to an ellipsoidal approximation to the geoid.
+        In particular, they provide a simpel means to convert between latitude / longitude and UK
+        *Ordnance Survey National Grid* co-ordinates of the form **AA 12345 12345**, as found on many maps.
+        
+        
+Keywords: Ordnance Survey,OS Grid,WGS84,Geodesy,Longitude,Latitude,Cartesian
+Platform: UNKNOWN
+Classifier: Development Status :: 4 Beta
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: C++
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Topic :: Artistic Software
+Classifier: Topic :: Multimedia :: Sound/Audio :: Conversion
