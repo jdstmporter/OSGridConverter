@@ -16,6 +16,11 @@
 #include <algorithm>
 #include <stdexcept>
 #include <exception>
+#include <tuple>
+#include <sstream>
+#include <regex>
+#include <iostream>
+#include <cmath>
 
 class PException : public std::exception {
 private:
