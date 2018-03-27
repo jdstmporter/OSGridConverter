@@ -44,8 +44,6 @@ enum class DatumName {
 
 
 class Datum {
-	friend bool operator==(const Datum &l,const Datum &r);
-	friend bool operator!=(const Datum &l,const Datum &r);
 
 private:
 	Ellipsoid e;
@@ -70,12 +68,11 @@ public:
 
 };
 
-bool operator==(const Datum &l,const Datum &r);
-bool operator!=(const Datum &l,const Datum &r);
+
 
 } /* namespace mapping */
 
-
+std::ostream & operator<<(std::ostream &o,const mapping::Datum &d);
 
 
 #endif /* DATUM_HPP_ */

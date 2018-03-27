@@ -37,15 +37,26 @@
 		}
 		PyErr_Clear();
 	}
-	else if(PyArg_ParseTuple(args,"ll",&e,&n)) {
+	else if(PyArg_ParseTuple(args,"ll",&n,&e)) {
 		self->grid=new coordinates::OSGrid(n,e);
 		return 0;
 	}
 	else {
-		PyErr_SetString(PyExc_SystemError,"Parameter must be string or long, long");
+		PyErr_SetString(PyExc_SystemError,"Parameter must be string or northing:long, easting:long");
 		return -1;
 	}
 }
+
+ PyObject * GridPoint_str(GridPoint *self) {
+	 try {
+	 	return PyUnicode_FromFormat("%dN %dE (%s)",self->grid->N(),self->grid->N(),self->grid->tag().c_str());
+	 }
+	 catch(...) {
+	 	return PException(PyExc_OSError,"Bad value")();
+	 }
+  }
+
+
 
  PyObject * GridPoint_EN(PyObject *self,PyObject *args) {
 	try {
@@ -57,15 +68,7 @@
 	}
 }
 
- PyObject * GridPoint_OSGridReference(PyObject *self,PyObject *args) {
-	try {
-		auto s=(GridPoint *)self;
-		return PyUnicode_FromFormat("%s",s->grid->tag().c_str());
-	}
-	catch(...) {
-		return PException(PyExc_OSError,"Bad value")();
-	}
-}
+
 
  PyObject * GridPoint_toLatLong(PyObject *self,PyObject *args) {
 	try {
@@ -79,10 +82,43 @@
 
 static PyMethodDef GridPointMethods[] = {
     {"toLatLong",  GridPoint_toLatLong, METH_VARARGS,"Convert to latitude / longitude"},
-	{"coordinates", GridPoint_EN, METH_VARARGS, "Get easting / northing"},
-	{"OSgridRef", GridPoint_OSGridReference,METH_VARARGS,"Get OS Grid Reference"},
+	{"coordinates", GridPoint_EN, METH_VARARGS, "Get northing / easting"},
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
+
+PyObject * GridPoint_E(GridPoint *self,void *closure) {
+ 	try {
+ 		return Py_BuildValue("l",self->grid->E());
+ 	}
+ 	catch(...) {
+ 		return PException(PyExc_OSError,"Bad value")();
+ 	}
+ }
+
+ PyObject * GridPoint_N(GridPoint *self,void *closure) {
+ 	try {
+ 		return Py_BuildValue("l",self->grid->N());
+ 	}
+ 	catch(...) {
+ 		return PException(PyExc_OSError,"Bad value")();
+ 	}
+ }
+
+ PyObject * GridPoint_gridReference(GridPoint *self,void *closure) {
+	 try {
+	 	 	return PyUnicode_FromFormat("%s",self->grid->tag().c_str());
+	 	 }
+	 	 catch(...) {
+	 	 	return PException(PyExc_OSError,"Bad value")();
+	 	 }
+}
+
+ static PyGetSetDef GridPointProperties[] = {
+ 		{"easting",(getter)GridPoint_E,NULL,"get easting",NULL},
+ 		{"northing",(getter)GridPoint_N,NULL,"get northing",NULL},
+		{"gridReference",(getter)GridPoint_gridReference,NULL,"get OS Grid Reference",NULL},
+ 		{NULL}
+ };
 
 const char *gridPointName="geoconv.GridPoint";
  const char *gridPointDocstr="Representation of Grid Point";
@@ -98,13 +134,13 @@ const char *gridPointName="geoconv.GridPoint";
  	0,                         			/*tp_getattr*/
  	0,                         			/*tp_setattr*/
  	0,                         			/*tp_compare*/
- 	0,                         			/*tp_repr*/
+ 	(reprfunc)GridPoint_str,                /*tp_repr*/
  	0,                         			/*tp_as_number*/
  	0,                  /*tp_as_sequence*/
  	0,                         			/*tp_as_mapping*/
  	0,                         			/*tp_hash */
  	0,                         			/*tp_call*/
- 	0,                         			/*tp_str*/
+	(reprfunc)GridPoint_str,                    /*tp_str*/
  	0,                         			/*tp_getattro*/
  	0,                         			/*tp_setattro*/
  	0,                         			/*tp_as_buffer*/
@@ -119,7 +155,7 @@ const char *gridPointName="geoconv.GridPoint";
 
 	GridPointMethods,             		/* tp_methods */
  	0,             		/* tp_members */
- 	0,                         			/* tp_getset */
+ 	GridPointProperties,                         			/* tp_getset */
  	0,                         			/* tp_base */
  	0,                         			/* tp_dict */
  	0,                         			/* tp_descr_get */
@@ -136,8 +172,11 @@ const char *gridPointName="geoconv.GridPoint";
   	PyModule_AddObject(m,name,(PyObject *)&geoconv_GridPointType);
   }
   GridPoint * PyGridPoint::make(const coordinates::LatitudeLongitude *lat) {
+	auto grid=new coordinates::OSGrid(*lat);
+	std::cerr<<"E is " << grid->E() << ", N is " << grid->N() << std::endl;
   	auto g=(GridPoint *)_PyObject_New(&geoconv_GridPointType);
-  	g->grid=new coordinates::OSGrid(*lat);
+  	g->grid=grid;
+  	Py_INCREF(g);
   	return g;
   }
 

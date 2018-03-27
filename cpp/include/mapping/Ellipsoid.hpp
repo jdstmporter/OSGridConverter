@@ -19,8 +19,6 @@ namespace mapping {
 
 
 class Ellipsoid {
-	friend bool operator==(const Ellipsoid &l,const Ellipsoid &r);
-	friend bool operator!=(const Ellipsoid &l,const Ellipsoid &r);
 private:
 
 	struct Axes {
@@ -46,7 +44,7 @@ public:
 	Ellipsoid(const double a=1.0,const double b=1.0, double f=0.0) noexcept;
 	Ellipsoid(const Axes &a) noexcept : Ellipsoid(a.a,a.b,a.f) {};
 	Ellipsoid(const Ellipsoid &other) noexcept : Ellipsoid(other.A,other.B,other.f) {};
-	Ellipsoid & operator==(const Ellipsoid &other) noexcept;
+	Ellipsoid & operator=(const Ellipsoid &other) noexcept;
 	virtual ~Ellipsoid() = default;
 	
 	double eccentricity1() const noexcept { return e1; }
@@ -57,6 +55,7 @@ public:
 	double N() const noexcept { return n; }
 	
 	double meridional(double phi,double phi0) noexcept;
+
 
 	enum class Name {
 		WGS84,
@@ -76,11 +75,12 @@ private:
 	static void initialise();
 
 };
-bool operator==(const mapping::Ellipsoid &l,const mapping::Ellipsoid &r);
-bool operator!=(const mapping::Ellipsoid &l,const mapping::Ellipsoid &r);
+
 
 
 } /* namespace mapping */
+
+std::ostream & operator<<(std::ostream &o,const mapping::Ellipsoid &e);
 
 
 #endif /* ELLIPSOID_HPP_ */

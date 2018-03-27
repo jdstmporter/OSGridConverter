@@ -31,8 +31,8 @@ private:
 	Vector angles;
 	double scale;
 
-	double s(const int n) { return sin(angles(n)); };
-	double c(const int n) { return cos(angles(n)); };
+	static const double AngleScale;
+	static const double ScaleScale;
 
 public:
 
@@ -54,7 +54,6 @@ public:
 
 
 } /* namespace mapping */
-
 
 
 

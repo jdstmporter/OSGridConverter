@@ -44,7 +44,10 @@ class Cleaner(Command) :
             except Exception as e:
                 print(f"{e.__class__.__name__} : {e}")
             
-        objects=findFiles('/opt/git/OSGridConverter/cpp',pattern=r'^.*\.o$')
+        objects=findFiles('/opt/git/OSGridConverter/cpp/',pattern=r'^.*\.o$')
+        print('Files are:')
+        for o in objects: print(f'    {o}')
+        
         for o in objects:
             print(f'Removing {o}')
             os.remove(o)

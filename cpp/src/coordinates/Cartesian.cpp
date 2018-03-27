@@ -29,7 +29,7 @@ Cartesian::Cartesian(const LatitudeLongitude &l) : vector(3) {
 	auto nu=e.majorAxis()/sqrt(1.0-e.eccentricity1()*s*s);
 	vector(0)=nu*c*cos(lambda);
 	vector(1)=nu*c*sin(lambda);
-	vector(2)=nu*(1.0-e.eccentricity1()*s);
+	vector(2)=nu*(1.0-e.eccentricity1())*s;
 }
 
 double Cartesian::P() const {

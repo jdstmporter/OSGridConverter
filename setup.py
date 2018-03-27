@@ -41,6 +41,7 @@ def makeExtension(module,src):
                                      ('MAINTENANCE_VERSION', v.maintenance)],
                     sources = src,
                     language = 'c++',
+                    extra_compile_args=['-std=c++14','-Wno-write-strings'],
                     include_dirs=['/usr/include','cpp/src'],
                     library_dirs = ['/usr/lib/x86_64-linux-gnu'])
 

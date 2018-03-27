@@ -36,9 +36,6 @@ OSGB36::OSGB36(double Phi,double LambdaE) : phi(Phi), E(LambdaE), transforms() {
 	auto nu3=nu*nu*nu;
 	auto nu5=nu3*nu*nu;
 	auto nu7=nu5*nu*nu;
-	auto nc=nu*c;
-	auto nc3=nc*c*c;
-	auto nc5=nc3*c*c;
 	auto rho = OSGB36::aF0()*(1-e2)*pow(v,-1.5);
 	auto eta1 = nu/rho;
 	auto eta2 = eta1-1.0;

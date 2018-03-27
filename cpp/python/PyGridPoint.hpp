@@ -20,7 +20,7 @@ void GridPoint_dealloc(GridPoint *self);
 int GridPoint_init(GridPoint *self,PyObject *args,PyObject *keywords);
 PyObject * GridPoint_toLatLong(GridPoint *self,PyObject *args);
 PyObject * GridPoint_EN(GridPoint *self,PyObject *args);
-PyObject * GridPoint_OSGridReference(GridPoint *self,PyObject *args);
+PyObject * GridPoint_gridReference(GridPoint *self,void *closure);
 
 class PyGridPoint {
 public:

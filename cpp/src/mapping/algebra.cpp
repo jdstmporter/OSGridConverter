@@ -27,6 +27,10 @@ Matrix transpose(const Matrix &m) {
 	return trans(m);
 }
 
+double ip(const Vector &v,const Vector &w) {
+	return boost::numeric::ublas::inner_prod(v,w);
+}
+
 }
 
 

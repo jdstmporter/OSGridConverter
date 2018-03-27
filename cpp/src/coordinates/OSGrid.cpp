@@ -28,15 +28,17 @@ OSGrid::OSGrid(const std::string & slug) {
 }
 
 OSGrid::OSGrid(const LatitudeLongitude &latlong) {
-	auto ll=latlong;
-	if(!ll.is(Tag::OSGB36)) {
-		ll=ll.transform();
-	}
+	std::cerr << latlong << std::endl;
+	auto ll=latlong.is(Tag::OSGB36) ? latlong : latlong.transform();
+	std::cerr << ll << std::endl;
+	std::cerr << ll.phi() << ", " << ll.lambda() << std::endl;
 	auto g=mapping::OSGB36(ll.phi(),ll.lambda());
 	auto ne=g.fromLatLong();
 	northings=long(std::get<1>(ne));
 	eastings=long(std::get<0>(ne));
+	std::cerr << *this << std::endl;
 }
+
 
 
 

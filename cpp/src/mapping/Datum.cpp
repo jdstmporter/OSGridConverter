@@ -38,14 +38,12 @@ Datum Datum::get(const DatumName &key) {
 
 
 
-bool operator==(const Datum &l,const Datum &r) {
-	return (l.e==r.e) && (l.helmert.eq(r.helmert));
-}
-bool operator!=(const Datum &l,const Datum &r){
-	return (l.e!=r.e) || (!l.helmert.eq(r.helmert));
-}
-
-
-
 
 }
+
+std::ostream & operator<<(std::ostream &o,const mapping::Datum &d) {
+	o << d.ellipsoid() << ", HELMERT";
+	return o;
+}
+
+

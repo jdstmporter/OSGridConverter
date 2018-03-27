@@ -24,7 +24,7 @@ Ellipsoid::Ellipsoid(double a,double b, double f_) noexcept :
 	M(3)=35.0*nnn/24.0;
 }
 
-Ellipsoid & Ellipsoid::operator==(const Ellipsoid &other) noexcept {
+Ellipsoid & Ellipsoid::operator=(const Ellipsoid &other) noexcept {
 	A=other.A;
 	B=other.B;
 	e1=other.e1;
@@ -62,16 +62,12 @@ Ellipsoid Ellipsoid::get(const Name &key) {
 	return Ellipsoid(ellipsoids[key]);
 }
 
-bool operator==(const mapping::Ellipsoid &l,const mapping::Ellipsoid &r) {
-	return (l.A==r.A) && (l.B==r.B);
+
 }
 
-bool operator!=(const mapping::Ellipsoid &l,const mapping::Ellipsoid &r) {
-	return (l.A!=r.A) || (l.B!=r.B);
-}
-
-
-
+std::ostream & operator<<(std::ostream &o,const mapping::Ellipsoid &e) {
+	o << "Axes (" << e.majorAxis() << "," << e.minorAxis() << ") Flattening " << e.flattening();
+	return o;
 }
 
 

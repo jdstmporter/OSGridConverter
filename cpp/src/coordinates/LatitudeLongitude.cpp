@@ -12,6 +12,7 @@
 #include "mapping/OSGB36.hpp"
 #include <stdexcept>
 #include <iomanip>
+#include "mapping/algebra.hpp"
 
 
 
@@ -74,16 +75,26 @@ LatitudeLongitude::LatitudeLongitude(const std::string &str,Tag tag) : datum(map
 LatitudeLongitude::LatitudeLongitude(const mapping::Vector &v,Tag tag) : datum(mapping::Datum::get(tag)), dTag(tag) {
 	mapping::Ellipsoid e=ellipsoid();
 
-	auto p=hypot(v(0),v(1));
-	auto t=(1.0+(e.eccentricity2()*e.minorAxis()/boost::numeric::ublas::inner_prod(v,v)))*e.minorAxis()*v(2)/(e.majorAxis()*p);
+	std::cerr<<"New ellipsoid is " << e << std::endl;
+	std::cerr<<"Vector is " << v << std::endl;
+
+	auto t=1.0+(e.e2b()/mapping::ip(v,v));
 	auto s=t/sqrt(1.0+t*t);
 	auto c=s/t;
 
-	double phi = std::isnan(c) ? 0 : atan2(v(2)+e.eccentricity2()*e.minorAxis()*pow(s,3),p-e.eccentricity1()*e.majorAxis()*pow(c,3));
+	double phi = 0;
+	if(!std::isnan(c)) {
+		auto p=hypot(v(0),v(1));
+		std::cerr << "p " << p << " z " << v(2) << std::endl;
+		auto tx=v(2)+e.e2b()*s*s*s;
+		auto ty=p-e.e2a()*c*c*c;
+		phi=atan2(tx,ty);
+	}
 	double lambda = atan2(v(1),v(0));
 
 	latitude=degrees(phi);
 	longitude=degrees(lambda);
+	std::cerr << "LL is " << *this << std::endl;
 }
 
 LatitudeLongitude::LatitudeLongitude(const OSGrid &grid,Tag tag) : datum(mapping::Datum::get(tag)), dTag(tag) {
@@ -96,10 +107,17 @@ LatitudeLongitude::LatitudeLongitude(const Cartesian &cartesian,Tag tag) : Latit
 
 LatitudeLongitude  LatitudeLongitude::transform( Tag newTag) const {
 	auto newDatum=mapping::Datum::get(newTag);
-	if(datum==newDatum) return *this;
+	std::cerr << "Datum is " << datum << std::endl;
+	std::cerr << "New datum is " << newDatum << std::endl;
+	if(newTag==dTag) return *this;
 	else {
+		std::cerr << "Different" << std::endl;
 		Cartesian c(*this);
-		auto c2=newDatum(datum.invert(c.vec()));
+		std::cerr << "Cartesian is " << c.vec() << std::endl;
+		auto i=datum.invert(c.vec());
+		std::cerr << "Inverse is " << i << std::endl;
+		auto c2=newDatum.apply(i);
+		std::cerr << "Cartesian is " << c2 << std::endl;
 		return LatitudeLongitude(c2,newTag);
 	}
 }
