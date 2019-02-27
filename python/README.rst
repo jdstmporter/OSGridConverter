@@ -4,7 +4,7 @@ Readme for OSGridConverter
 Description
 -----------
 
-This package allowd the user to manipulate co-ordinates on the Earth's surface
+This package allows the user to manipulate co-ordinates on the Earth's surface
 in the two major co-ordinate systems: **latitude / longitude** measured in degrees,
 and cartographic systems, measured in **eastings and northings**,
 based on a local ellipsoidal approximation to the Earth's geoid.
